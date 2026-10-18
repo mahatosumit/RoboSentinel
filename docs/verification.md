@@ -13,8 +13,9 @@ refresh below was verified on 19 October 2026 (Asia/Calcutta / IST).
 **Latest replay release:** 60 tests, 18 syntax-checked files, three original
 scenarios plus the 12-step replay, and 19 automated Chromium journeys passed.
 See the final section for current evidence; earlier counts are historical.
-The subsequent [release audit](release-audit.md) records the now-verified public
-but empty repository, configured origin and remaining publication/account gates.
+The final publication receipt below verifies public source and hosted CI. Earlier
+empty-repository/CI-unrun findings are historical. Event eligibility and submission
+remain separate unverified gates; see the [release audit](release-audit.md).
 
 ## Baseline before edits
 
@@ -320,3 +321,42 @@ for the criterion-by-criterion decision, exact Docker/push commands and approval
 Updated local presentation validation passed **54 relative links/anchors**, all
 seven PNG signatures/dimensions and the unchanged 46/473-character draft. The
 runtime, UI, tests, packaging, CI and screenshots remained unchanged from `c3a293b`.
+
+## Public source and hosted CI receipt — 19 October 2026
+
+Remote `main` and local committed HEAD matched
+**`a1f3a21675527cafb4924ff1441922b036ac4205`**. The user published through their
+terminal. `469c837` is an ancestor; the only new tree change at `a1f3a21` is the
+README executable bit, not file content. Runtime, tests, packaging and evidence
+therefore remain byte-identical to the audited release.
+
+- Anonymous GitHub page presents the README, source tree and MIT licence.
+- **All 55 tracked files** were fetched anonymously from the commit-pinned raw
+  GitHub URLs and SHA-256 compared with the fetched Git objects, including all
+  **seven PNGs**, source, docs, workflow, manifests and licence.
+- **CI run 39161020150 completed successfully** at this exact SHA:
+  https://github.com/mahatosumit/RoboSentinel/actions/runs/39161020150.
+  The job API confirms successful checkout/setup, offline installation, tests,
+  syntax checking and deterministic demos. No Docker or browser job is claimed.
+- Fresh local `npm test` again passed **60/60**, `npm run check` passed **18 files**,
+  and `npm run demo` passed all **three original cases and 12 replay steps**.
+- Public HTTP/byte checks do not prove interactive Mermaid rendering. Browser QA
+  remains the previously executed **19 passing Chromium journeys** against the
+  unchanged app, not a new hosted-browser or Docker result.
+
+Docker execution remains NOT TESTED. Linux CLI authentication is still unavailable
+for future pushes; that does not negate the independently verified public release.
+The organizer browser again timed out without creating a tab. Registration,
+connected-account identity, exclusive-AI eligibility, actual form limits, selected
+sessions and a real receipt/Submission ID remain unverified. Git authorship
+metadata or a passing CI job alone cannot establish exclusive-tool compliance.
+
+During the check, local and remote HEAD changed outside this agent's Git commit
+operations to **`bc8ec53a69cf8f080e2dbdcfb446af6220a7b95e`**, with parent `469c837`.
+It has exactly the same Git file tree as the earlier `a1f3a21`; both observations
+are retained, not rewritten into one receipt. **CI run 39161439943 also completed
+successfully** for `bc8ec53`:
+https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943.
+Anonymous retrieval/byte checks were repeated for all 55 files at this snapshot.
+Metadata changes do not by themselves establish the underlying tool use or
+exclusive-AI eligibility. That organizer/account gate remains unverified.

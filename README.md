@@ -33,11 +33,13 @@ requires explicitly confirmed, freshly checked recovery.
 | JavaScript syntax and deterministic demos | **VERIFIED** | 18 files; 3 scenarios plus the 12-step safety replay passed |
 | Rendered cockpit and replay | **VERIFIED** | 19 automated Chromium journeys, including export, keyboard and narrow layouts |
 | Clean local checkout | **VERIFIED** | Offline root install, checks and server/route smoke tests passed |
-| Docker image and hosted CI | **NOT TESTED** | Recipes exist; no successful Docker build or hosted run is claimed |
+| Hosted CI | **VERIFIED** | [Run 39161439943 passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943) at published commit `bc8ec53`: offline install, tests, syntax and demos |
+| Docker image | **NOT TESTED** | Recipe exists; no container engine is available in this workspace |
 | Hardware, Safari/Firefox and manual screen-reader use | **NOT TESTED** | Outside the current evidence |
-| Public source release and Buildathon entry | **BLOCKED** | Public repository exists but is empty; source push, workspace authentication and final submission remain pending |
+| Public source release | **VERIFIED** | Published `bc8ec53`; all 55 tracked files, including seven screenshots, anonymously retrieved and byte-checked |
+| Buildathon entry | **NOT VERIFIED** | Registration, connected identity, exclusive-AI eligibility, form limits and organizer receipt remain pending |
 
-These are local verification results, not coverage percentages, deployment
+These are scoped software/publication checks, not coverage percentages, deployment
 badges or certification. Details and limitations are in
 [`docs/verification.md`](docs/verification.md).
 
@@ -305,9 +307,9 @@ every security risk has been eliminated.
 
 [`docs/verification.md`](docs/verification.md) records baseline commits, actual
 commands, previous fixes, clean-checkout evidence and untested areas. Runtime,
-dependencies and CI actions are pinned; CI is configured but no hosted passing
-run is claimed. Docker build/run, physical devices, hardware and performance/load
-metrics remain **NOT TESTED**.
+dependencies and CI actions are pinned. Hosted CI passed at `bc8ec53`; its job
+does not build Docker or run browser QA. Docker build/run, physical devices,
+hardware and performance/load metrics remain **NOT TESTED**.
 
 ## Demo walkthrough
 
@@ -345,9 +347,9 @@ Add a regression test for changed behaviour; for UI changes, run the optional
 [browser harness](qa/README.md) and identify any untested browsers. Do not weaken
 an interlock or replace deterministic rules without explaining the behaviour change.
 
-Once the public repository is verified, use its Issues and pull requests.
-Until then, share a patch/reproduction with the project maintainer; no issue-tracker
-URL is invented here. No hardware operation is requested to reproduce a defect.
+Use the public repository's [Issues](https://github.com/mahatosumit/RoboSentinel/issues)
+and pull requests for reproducible reports and focused changes. No hardware
+operation is requested to reproduce a defect.
 
 ## Licence and project links
 
@@ -361,13 +363,14 @@ are permitted with its notice retained; the software is provided without warrant
 - [Buildathon submission draft and verified event guidance](docs/submission.md)
 - [Official-criteria assessment and skeptical competition review](docs/competition-review.md)
 - [Current release audit and publication checklist](docs/release-audit.md)
-- [GitHub repository — source publication pending](https://github.com/mahatosumit/RoboSentinel)
+- [Public GitHub repository](https://github.com/mahatosumit/RoboSentinel)
 - [Official Frontier Buildathon 2026 guide](https://omnirush.ai/buildathon)
 
-**Publication status (19 October 2026):** the repository above is anonymously
-accessible and public, but currently has **no published commits or files**.
-`origin` points to that existing repository; do not try to recreate it. The Linux
-workspace CLI still reports no authenticated host despite a reported login
-elsewhere. No source push, rendered public README/images, hosted demo,
-package-registry release or completed Buildathon submission is claimed.
-See the current release audit and submission draft for verified facts and blockers.
+**Verified public snapshot (19 October 2026):**
+`bc8ec53a69cf8f080e2dbdcfb446af6220a7b95e`. The anonymous GitHub page presents the
+README and MIT licence; all 55 tracked files, including seven PNGs, were retrieved
+and matched against Git objects. [Hosted CI passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943)
+for that exact commit. Interactive Mermaid rendering and Docker execution are
+not verified. No hosted application, video, package release or completed
+Buildathon submission is claimed. Registration, exclusive-AI eligibility and
+actual form/receipt checks remain pending; see the submission draft.

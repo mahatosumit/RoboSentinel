@@ -15,7 +15,7 @@ rules in the read-only response. Signed-in dashboard fields remain unverified.
 | --- | --- | --- |
 | **It works** | Strong bounded software evidence | 60 passing tests, actual controls and 19 Chromium journeys; no hardware/field validation |
 | **It's worth using** | Plausible educational/operator-review tool; impact not validated | Replay explains why fresh communications, clear faults and motion authorization are different; no user interviews, adoption or measured operator benefit |
-| **It rebuilds** | Locally reproducible; mandatory Docker evidence gap remains | Pinned Node, lockfiles, zero-dependency runtime, offline core checks and container recipe; Docker/hosted CI not executed |
+| **It rebuilds** | Locally reproducible; hosted core CI passes; Docker evidence gap remains | Pinned Node/locks, offline core checks and container recipe; Docker not executed |
 | **OmniRush built it** | Traceable local work; organizer acceptance not established | Genuine session, source/commits, two bounded implementation agents, tests and review; sessions still must be selected/accepted in the event dashboard |
 
 **The guide publishes no category weights or numeric scoring scale.** The ten
@@ -178,7 +178,7 @@ new authentication layer or unrelated UI overhaul were introduced.
 | `bash qa/test-debian.sh` | **19 Chromium journeys passed** | Real DOM, JSON download, keyboard, narrow layout, no-time-advance, offline computation and deliberate failure paths |
 | Clean Git checkout at `d1884be` | Offline `npm ci` and `make test` passed; checkout clean | Same Debian environment, not Docker or public GitHub |
 | Core/manifest diff against baseline | Simulator, detector, policy, monitor, live app/shared CSS and lockfiles unchanged | Replay is additive, not a new safety controller |
-| Docker / hosted CI | **NOT TESTED** | No Docker/Podman/Buildah command and no published CI run |
+| Docker / hosted CI | **Docker NOT TESTED; hosted core CI PASSED** | Run 39161439943 at `bc8ec53` succeeded; no Docker job/engine |
 
 Normal browser journeys captured no page/console errors or failed requests.
 The two intentional failure journeys abort the monitor module or return HTTP
@@ -216,21 +216,17 @@ never passed off as current execution.
 
 ## F. Repository release state
 
-**Public repository URL: VERIFIED, source publication still BLOCKED:**
-https://github.com/mahatosumit/RoboSentinel. The later release audit confirmed
-public visibility but no published refs/files and configured `origin` to that
-existing repository. Workspace `gh auth status` still reports no logged-in host.
-No credentials were copied from another environment. The named public account
-is older than three days; its identity must still match the joined event account.
-
-README and seven genuine local PNGs exist and use repository-relative links.
-Local links can be checked without network, but anonymous GitHub accessibility,
-rendered README/Mermaid, public image responses and latest pushed commit cannot
-be verified until publication. Do not turn a proposed repository name into a URL.
-See [current release audit](release-audit.md) for the updated evidence and exact
-unblocking commands. No hosted app, uploaded video, package release, container run or hosted CI result
-is claimed. New code is committed; the evidence/documentation refresh follows as
-a separate reviewed working-step commit.
+**Public source VERIFIED:** https://github.com/mahatosumit/RoboSentinel at
+**`bc8ec53a69cf8f080e2dbdcfb446af6220a7b95e`**. The anonymous GitHub page presents
+the README/source/MIT licence; all 55 tracked files including seven genuine PNGs
+were retrieved and byte-checked. [Hosted core CI passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943)
+at that SHA. Compared with `469c837`, the published tree change is README
+permissions only, not application code. The earlier `a1f3a21` snapshot has the
+same file tree; both observations are retained in the verification receipt.
+Interactive Mermaid rendering, Docker, hosted application and video remain
+unverified/unavailable. The named account exceeds three days, but event-connected
+identity, exclusive-AI compliance and submission acceptance remain separate gates.
+See [current release audit](release-audit.md) for the receipt and remaining actions.
 
 ## G. Submission fields and required evidence
 
@@ -268,22 +264,22 @@ unverified. [Submission checklist](submission.md) records each gate.
    still unverified; that is an important gap against explicit judging guidance.
 7. **Biggest weaknesses?** Simplified plant, no user validation, dense evidence,
    fixed-case-only replay, no signed/durable live audit, unverified container and
-   missing public access/account/form completion.
+   incomplete account/eligibility/form verification.
 8. **Why might it lose?** The problem's usefulness is unmeasured and the core
    techniques are established engineering rather than a novel robotics result.
    A well-tested local artifact can still fail eligibility or be hard to inspect
    without public source/video. Test counts are not a substitute for impact.
-9. **Single highest-value next change?** Resolve authenticated public publication
-   and submission eligibility first; then obtain actual Docker rebuild evidence.
+9. **Single highest-value next change?** Public publication and core CI are now
+   verified. Resolve submission eligibility and obtain actual Docker rebuild evidence.
    Another simulated feature is now lower value.
 10. **Ready now?** Not as a completed submission. The local technical artifact is
     substantially stronger, but required external gates remain open.
 
 ## I. Recommendation — SUBMIT AFTER SPECIFIC FIXES
 
-1. Authenticate the workspace GitHub CLI; inspect the intended account/existing
-   repository, publish without force-pushing, verify anonymous repo/README/images
-   and latest commit. Do not infer the event-connected identity from CLI login.
+1. Public source and core CI are verified at `bc8ec53`. Keep future documentation
+   corrections on normal non-force pushes and verify their new SHA/CI; do not
+   infer event-connected identity or eligibility from publication alone.
 2. Confirm joining/registration before **19 October 23:59 IST**, account age,
    solo/fresh-work/OmniRush-only eligibility and actual session selection.
 3. Execute the Docker recipe and offline tests on a real engine; fix demonstrated

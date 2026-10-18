@@ -5,7 +5,22 @@ container execution and the actual event submission are not completed merely
 because local tests pass. Checked **19 October 2026 (IST)**, beginning at
 00:52:24 IST. Baseline: `c3a293b9311947a62ea5ceac64e4c4a670e3185a`.
 
-## Actual local and remote state
+## Publication update — source and CI verified
+
+The pre-publication observations below are historical. Public `main` was later
+verified at **`bc8ec53a69cf8f080e2dbdcfb446af6220a7b95e`**. All 55 tracked files,
+including source/README/licence and seven PNGs, were retrieved anonymously and
+matched to Git objects. The new commit changes only README permissions, not
+content relative to `469c837`. [CI run 39161439943 passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943)
+for that SHA, including offline install, tests, syntax and demos. Docker and
+interactive Mermaid rendering remain unverified. See the latest receipt in
+[verification.md](verification.md). Registration, exclusive-AI eligibility,
+actual form limits/session selection and submission receipt remain pending;
+neither Git metadata nor CI establishes organizer acceptance. The earlier
+`a1f3a21` snapshot/CI receipt is retained in verification.md; `bc8ec53` has the
+same file tree. A metadata change does not resolve actual tool-use eligibility.
+
+## Actual local and remote state — pre-publication snapshot
 
 The supplied starting report and this workspace did not match. Direct checks
 found clean `main`, no tracked/staged/untracked changes and no configured remote.
@@ -59,7 +74,7 @@ again for this audit. It publishes four criteria, **no numerical weights**.
 | --- | --- | --- | --- | --- |
 | **It works:** Is this real behavior or painted success? | Actual monitor snapshots, computed assertions, 60 tests, 19 browser journeys, inspected JSON download and matching CLI replay | Fixed synthetic case and bounded browser evidence, not hardware/general fault diagnosis | Keep the demonstrated code frozen and replay the complete incident | All steps/checks, recovery rejections, downloaded bytes and failure paths pass; reproduced locally |
 | **It's worth using:** Who benefits beyond a set of gauges? | A concrete training/operator-review story distinguishes reports, knowledge, commands, latches and recovery permission | No operator study, adoption or measured benefit | Present the 90-second case to a relevant reviewer without adding features | Genuine feedback if obtained; none invented or claimed here |
-| **It rebuilds:** Can judges rebuild and test offline in Docker? | Pinned Node/locks, official base tag exists, clean checkout install/tests and real startup/asset checks pass | No available container engine; hosted CI has never run | Run the existing Docker recipe and offline checks on an engine | Actual successful image build, offline commands, startup and health—not static inspection alone |
+| **It rebuilds:** Can judges rebuild and test offline in Docker? | Pinned Node/locks, clean checkout checks and startup pass; hosted core CI now passes | No available container engine; CI does not build Docker | Run the existing Docker recipe and offline checks on an engine | Actual successful image build, offline commands, startup and health—not static inspection alone |
 | **OmniRush built it:** Do the listed sessions match the code? | Local commits, genuine parent session pointer and recorded OmniRush implementation/test work | Event join/connected identity/session selection and organizer acceptance are not verified | Open the real dashboard, confirm eligibility and select genuine sessions | Actual signed-in form state, user approval, organizer receipt and Unstop ID handoff |
 
 Confirmed guide requirements: online/solo, fresh work during the event, OmniRush
@@ -118,7 +133,7 @@ and `npm run demo` fallback are the release demonstration.
 | Tracked `server.js` startup from fresh clone | **12 asset routes, 4 forbidden routes, HEAD and security headers passed** | Temporary loopback process with HOST/PORT; stopped afterward |
 | Local presentation check after refresh | **54 links/anchors, 7 PNG signatures/dimensions, 46/473-character draft passed** | Local filesystem/content checks, not GitHub rendering |
 | Docker | **NOT TESTED** | No docker/podman/buildah executable or available Docker socket |
-| Hosted GitHub Actions | **NOT RUN** | Public API reported zero runs on the empty repository |
+| Hosted GitHub Actions | **PASSED at `bc8ec53`** | Run 39161439943 verified; offline install, tests, syntax and demos passed |
 
 Normal browser journeys captured no console/page errors or failed requests. Two
 controlled failure journeys intentionally abort the monitor module or return HTTP
@@ -133,7 +148,8 @@ CI workflow review: push/pull-request triggers, read-only contents permission,
 commit-pinned standard actions, Node **22.23.3**, offline root install and the same
 three checked commands. No AI action, deployment, user-supplied shell interpolation
 or secret-bearing job is present. Workflow inspection and matching local commands
-are not a successful hosted CI run. Its job does not currently build Docker.
+are distinct from the subsequently verified successful hosted run above. Its job
+does not currently build Docker.
 
 The official Node distribution publishes v22.23.3; Docker Hub's official `node`
 repository reports **22.23.3-bookworm-slim** active. Those checks establish pin/tag
@@ -195,7 +211,7 @@ none of these container results are claimed as passed here.
 
 - [ ] Verify joined/registered account before **19 October 23:59 IST** and confirm
   solo/fresh-work/exclusive-AI compliance; connect the intended GitHub identity.
-- [ ] Confirm a real published commit and public source/README/images; inspect CI.
+- [x] Confirm published `bc8ec53`, public source/README/seven images and passing CI.
 - [ ] Obtain real Docker build/offline-test/startup evidence, or disclose its absence.
 - [ ] Inspect actual organizer fields/limits and select genuine OmniRush sessions.
 - [ ] Use title **RoboSentinel — Replayable Robot Fault Response**, proposed Open
@@ -204,6 +220,7 @@ none of these container results are claimed as passed here.
 - [ ] Submit before **20 October 23:59 IST**, verify the actual organizer receipt,
   then paste the real Submission ID into Unstop and verify that handoff.
 
-No published SHA, eligible registration, saved form, accepted session list,
-submission ID, video, hosting URL or winning probability is invented. The next
-highest-value action requires account/environment access, not more code.
+The published SHA is verified above. No eligible registration, saved form,
+accepted session list, submission ID, video, hosting URL or winning probability
+is invented. The next highest-value action requires account/environment access,
+not more code.

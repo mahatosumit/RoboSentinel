@@ -1,8 +1,8 @@
 # OmniRush Frontier Buildathon 2026 — submission draft
 
-**Status: BLOCKED / not submitted.** The project content is prepared; public
-GitHub publication, account eligibility and final form validation are not yet
-verified. No repository, demo, recording or submission receipt is invented.
+**Status: BLOCKED / no verified submission.** Public source and hosted CI are
+verified; account eligibility, exclusive-AI compliance and actual form/receipt
+validation remain pending. No demo, recording or submission receipt is invented.
 Do not submit automatically: the user must review the completed fields and
 explicitly authorize submission.
 
@@ -20,12 +20,12 @@ Checked on **19 October 2026 (Asia/Calcutta, IST / UTC+05:30)**:
 
 | Requirement | Verified organizer guidance | Project / account status |
 | --- | --- | --- |
-| Submission deadline | **20 October 2026, 11:59 PM IST** (UTC **20 October, 18:29**); locks by server clock | Not submitted |
+| Submission deadline | **20 October 2026, 11:59 PM IST** (UTC **20 October, 18:29**); locks by server clock | No verified submission receipt |
 | Join/registration cutoff | **19 October 2026, 11:59 PM IST** (UTC **19 October, 18:29**) for prize eligibility | Individual registration/join state unverified |
 | Participation | Online, solo; OmniRush must be the only generative AI tool used for code/text/images | Work here used OmniRush; personal/overall eligibility requires user confirmation |
 | Fresh work | Start fresh during the event; judges compare code to genuine OmniRush sessions | Original empty workspace and project session are documented; organizer acceptance not claimed |
-| GitHub | GitHub account at least **3 days old**; public repository on the account connected to the event | Named public account `mahatosumit` was created in 2021; public repo exists but is empty. Event-connected identity and workspace login remain unverified |
-| Required evidence | Repository with README and the OmniRush sessions used to build it | README and genuine app-local session pointer prepared; published repo/form selections pending |
+| GitHub | GitHub account at least **3 days old**; public repository on the account connected to the event | Named account `mahatosumit` was created in 2021; public source at `bc8ec53` verified. Event-connected identity remains unverified |
+| Required evidence | Repository with README and the OmniRush sessions used to build it | Public README/source verified; genuine app-local session pointer prepared; form session selections pending |
 | Video | **Optional**, recommended **2–3 minutes** | Presenter script and screenshots exist; no video recorded/uploaded |
 | Live link | **Optional** | Local dashboard only; no public app hosting |
 | Final handoff | Submit track/repo/sessions through dashboard, then copy the real **Submission ID into Unstop** | No Submission ID exists in the available evidence |
@@ -58,10 +58,13 @@ BLOCKED** until the actual title/description fields are inspected.
 ## Links and demonstration
 
 - **Public repository URL: VERIFIED**, https://github.com/mahatosumit/RoboSentinel.
-  Anonymous page/API checks confirm public visibility; GitHub reports an empty
-  repository, and `git ls-remote` returns no refs. **Source publication is BLOCKED**:
-  `origin` is configured to the existing repo, but the workspace CLI still reports
-  no logged-in host. No published commit or rendered README/image is verified.
+  Verified public snapshot: **`bc8ec53a69cf8f080e2dbdcfb446af6220a7b95e`**. Anonymous GitHub
+  page/README/licence are accessible; all **55 tracked files**, including source
+  and seven screenshots, were retrieved and byte-checked against Git objects.
+- **Hosted CI: PASSED** for that exact commit:
+  https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943.
+  Offline installation, tests, syntax and demos passed; Docker/browser QA are
+  not jobs in that workflow. Interactive Mermaid rendering is not verified.
 - **Public demo/video URL: NOT AVAILABLE.** Neither is mandatory per the guide;
   do not add a placeholder URL to the final form.
 - Local dashboard: `npm start`, then `http://127.0.0.1:3000/`.
@@ -94,7 +97,8 @@ thresholds, realistic maps/charging/RTB route, fleet support or external-stream
 sequencing/replay adapter. Audit history is bounded/in-memory and disappears on
 reload; only the fixed incident replay exports executed evidence, not arbitrary
 live sessions. Safari/Firefox, native Windows, physical mobile devices, manual screen-
-reader use, performance/load measurements, Docker and hosted CI are not tested.
+reader use, performance/load measurements and Docker are not tested. Hosted CI
+is now verified as above; it is not a substitute for container execution.
 
 ## Genuine OmniRush session evidence
 
@@ -117,19 +121,19 @@ work or organizer acceptance. Do not invent or backfill additional sessions.
 The built-in browser's attempt to open the event dashboard timed out and a
 subsequent tab listing was empty. No signed-in page was inspected and no write
 or submission action was dispatched. The extension action inventory exposed no
-GitHub/publication action that resolves the CLI authentication blocker.
+GitHub/publication action that resolves Linux CLI authentication. Publication
+has since been performed from the user's terminal and independently verified.
 
 ## Final submission checklist
 
 - [ ] Verify event join/registration, solo eligibility and the connected GitHub
   account's age/identity in the user's dashboard.
-- [ ] Make CLI authentication available in this workspace without copying tokens
-  into project files/chat, or use the already-authenticated terminal for a normal
-  push from this same checkout. Do not recreate the existing repository.
-- [ ] Publish verified `main` to public `robosentinel` on that connected account;
-  verify public visibility, latest commit, README, screenshots and source.
-- [ ] Verify a real published commit and anonymous source/README/image access;
-  the public URL exists but its empty state is not a source release.
+- [x] Publish `main` on the named account and verify anonymous repository,
+  README/source/licence/seven images at `bc8ec53`; event-connected identity is
+  a separate unchecked requirement above.
+- [x] Verify actual hosted CI for the published commit.
+- [ ] Resolve exclusive-generative-AI eligibility through truthful provenance
+  review and organizer clarification where needed; do not infer it from CI or metadata alone.
 - [ ] Inspect title/description limits and required fields in the live form.
 - [ ] Select only genuine project sessions and Open Frontier if appropriate.
 - [ ] Add a real video/live link only if one is made and checked; they are optional.

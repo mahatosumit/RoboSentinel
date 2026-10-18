@@ -149,5 +149,6 @@ HOST/PORT settings only; no automatic dotenv loading is implemented. The README
 contains source-linked behaviour tables and a Mermaid view of the existing
 architecture, not a new backend or network robot API. Browser captures are genuine
 and tracked; generated diagnostic captures and tool/cache directories are ignored.
-Docker execution, hosted CI and public GitHub rendering remain unverified until
-their corresponding tools/authentication are available.
+Public source and hosted core CI were verified at `bc8ec53`; the receipt is in
+docs/verification.md. Docker execution and interactive Mermaid rendering remain
+unverified; hosted CI does not build Docker or run the browser harness.
