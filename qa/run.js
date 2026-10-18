@@ -8,6 +8,8 @@ import { createAppServer } from '../server.js';
 // Isolated test browser: never attaches to a user's profile or external browser.
 const evidence = fileURLToPath(new URL(process.env.CAPTURE_EVIDENCE === '1'
   ? '../docs/evidence/' : '../test-results/browser-qa/', import.meta.url));
+const replayEvidence = process.env.CAPTURE_REPLAY_EVIDENCE === '1'
+  ? fileURLToPath(new URL('../docs/evidence/', import.meta.url)) : evidence;
 await mkdir(evidence, { recursive: true });
 const server = createAppServer();
 server.listen(0, '127.0.0.1');
@@ -218,6 +220,101 @@ try {
     await page.setViewportSize({ width: 768, height: 1024 });
     await layout(page, 768);
   }, { viewport: { width: 320, height: 740 } });
+  await check('deterministic incident replay proves hidden faults, recovery and exported evidence', async page => {
+    await page.getByRole('link', { name: 'Replay safety case', exact: true }).click();
+    await text(page, '#replay-progress', /0\s*\/\s*12/);
+    assert.ok(await page.locator('#replay-export').isDisabled());
+    const next = () => page.locator('#replay-next').click();
+    await next();
+    await text(page, '#replay-commanded', /^navigating$/);
+    await next(); await next();
+    await text(page, '#replay-reported', /^navigating$/);
+    await text(page, '#replay-commanded', /^faulted$/);
+    await text(page, '#replay-motion', /disabled/i);
+    await text(page, '#replay-faults', /Heartbeat lost/);
+    await text(page, '#replay-evidence', /4000/);
+    await page.screenshot({ path: `${replayEvidence}incident-replay.png`, fullPage: true });
+    const held = await page.locator('#replay-evidence').innerText();
+    await page.clock.runFor(60_000);
+    assert.equal(await page.locator('#replay-evidence').innerText(), held, 'Replay never advances with wall time');
+    await next();
+    assert.doesNotMatch(await page.locator('#replay-faults').innerText(), /Motor temperature high/);
+    await next();
+    await text(page, '#replay-history', /command rejected/);
+    await next();
+    await text(page, '#replay-faults', /Motor temperature high/);
+    await text(page, '#replay-faults', /95/);
+    await next(); await next();
+    await text(page, '#replay-latch', /latched/i);
+    await text(page, '#replay-motion', /disabled/i);
+    await text(page, '#replay-eligibility', /confirmation/i);
+    await next(); await next(); await next();
+    await text(page, '#replay-commanded', /^recovering$/);
+    await text(page, '#replay-motion', /disabled/i);
+    await next();
+    await text(page, '#replay-commanded', /^navigating$/);
+    await text(page, '#replay-progress', /12\s*\/\s*12/);
+    assert.ok(await page.locator('#replay-next').isDisabled());
+    const downloadPromise = page.waitForEvent('download');
+    await page.locator('#replay-export').click();
+    const download = await downloadPromise;
+    const chunks = [];
+    for await (const chunk of await download.createReadStream()) chunks.push(chunk);
+    const exported = JSON.parse(Buffer.concat(chunks).toString());
+    assert.equal(exported.schema, 'robosentinel.incident.v1');
+    assert.equal(exported.replay.frames.length, 12);
+    assert.equal(exported.replay.complete, true);
+    assert.equal(exported.replay.frames[2].state.telemetry.mode, 'navigating');
+    assert.equal(exported.replay.frames[2].state.mode, 'faulted');
+    assert.ok(exported.replay.frames.every(frame => frame.checks.length && frame.checks.every(check => check.passed)));
+    await page.screenshot({ path: `${replayEvidence}incident-recovery.png`, fullPage: true });
+    await page.locator('#replay-reset').click();
+    await text(page, '#replay-progress', /0\s*\/\s*12/);
+    await text(page, '#replay-commanded', /^idle$/);
+    assert.ok(await page.locator('#replay-export').isDisabled());
+  });
+  await check('incident replay is keyboard-operable and contained at 320px', async page => {
+    await page.getByRole('link', { name: 'Replay safety case', exact: true }).click();
+    // The HTML progress placeholder exists before the dynamic engine import;
+    // a disabled button cannot receive keyboard focus until initialization ends.
+    await text(page, '#replay-status', /Independent replay ready/);
+    await text(page, '#replay-progress', /0\s*\/\s*12/);
+    await page.locator('#replay-next').focus();
+    await page.keyboard.press('Enter');
+    await text(page, '#replay-progress', /1\s*\/\s*12/);
+    await layout(page, 320);
+    assert.ok(await page.locator('#replay-next:focus-visible').count());
+    for (const control of await page.locator('main button').all()) {
+      const box = await control.boundingBox();
+      if (box) assert.ok(box.height >= 44, 'Replay target >=44px');
+    }
+    await page.setViewportSize({ width: 768, height: 1024 });
+    await layout(page, 768);
+  }, { viewport: { width: 320, height: 740 } });
+  await check('loaded cockpit remains a local simulation when HTTP networking goes offline', async page => {
+    await page.context().setOffline(true);
+    await page.locator('#start').click();
+    await inject(page, 'overheating');
+    await page.clock.runFor(1000);
+    await text(page, '#commanded-mode', /^faulted$/);
+    await text(page, '#faults', /95 °C/);
+    await text(page, '#motion-state', /Motion disabled/);
+    assert.ok(await page.locator('#fatal-error').isHidden());
+    // There is no robot/network telemetry API. Browser HTTP loss must not be
+    // misrepresented as an injected simulated robot communication-loss fault.
+    assert.doesNotMatch(await page.locator('#faults').innerText(), /Heartbeat lost/);
+  });
+  const replayFailureContext = await browser.newContext();
+  try {
+    const page = await replayFailureContext.newPage();
+    await page.route('**/src/incident.js', route => route.fulfill({ status: 503,
+      contentType: 'text/plain', body: 'Intentional QA unavailable module' }));
+    await page.goto(`${origin}/replay.html`, { waitUntil: 'networkidle' });
+    await text(page, '#replay-error', /Replay unavailable/);
+    await text(page, '#replay-commanded', /Unavailable/);
+    for (const control of await page.locator('main button').all()) assert.ok(await control.isDisabled());
+    console.log(`PASS ${++passed}: replay HTTP 503 module failure is explicit and disables controls (intentional failed request)`);
+  } finally { await replayFailureContext.close(); }
   // Deliberately fail a local module request to exercise the real error UI.
   // Expected network failure is checked separately from the clean-load journeys.
   const failureContext = await browser.newContext();

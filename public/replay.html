@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#236858">
+  <title>RoboSentinel · Replay safety case</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/replay.css">
+  <script type="module" src="/replay.js"></script>
+</head>
+<body class="replay-page">
+  <a class="skip-link" href="#main">Skip to replay</a>
+  <div class="simulation-banner"><strong>SIMULATION ONLY</strong><span>Deterministic incident replay · no hardware connection</span></div>
+  <div class="shell">
+    <header class="page-header">
+      <div><p class="eyebrow">ROBOSENTINEL / INCIDENT EVIDENCE</p><h1>Replay safety case</h1><p class="muted">Stale telemetry. A hidden cause. Explicit recovery.</p></div>
+      <nav aria-label="Main navigation"><a class="replay-back" href="/">Return to simulation cockpit</a></nav>
+    </header>
+    <main id="main" tabindex="-1">
+      <section class="panel replay-introduction" aria-labelledby="scope-title">
+        <h2 id="scope-title">One incident, advanced by you</h2>
+        <p>This independent simulation runs scripted operator decisions. Each evidence step executes against its own monitor instance. Nothing advances automatically; waiting does not change the evidence.</p>
+        <p class="muted">No live scene modification. This is not a telemetry connection or service, not a tamper-proof log, and not evidence of physical safety or hardware validation.</p>
+      </section>
+      <noscript><p class="error-panel">JavaScript is required to execute this deterministic local replay.</p></noscript>
+      <div id="replay-error" class="error-panel" role="alert" hidden></div>
+      <section class="panel replay-controls-panel" aria-labelledby="replay-title">
+        <div class="section-heading"><h2 id="replay-title">Incident replay</h2><span class="badge" id="replay-completion">Initializing</span></div>
+        <div class="replay-progress-row"><p>Evidence steps <strong id="replay-progress">0 / 12</strong></p><p id="replay-export-note" class="muted">Execute a step to enable evidence download.</p></div>
+        <div class="replay-controls">
+          <button type="button" class="primary" id="replay-next" disabled>Next evidence step</button>
+          <button type="button" id="replay-reset" disabled>Restart replay</button>
+          <button type="button" id="replay-export" aria-describedby="replay-export-note" disabled>Download evidence JSON</button>
+        </div>
+        <p id="replay-status" class="replay-status" role="status" aria-live="polite" aria-atomic="true">Initializing independent replay…</p>
+      </section>
+      <section class="panel replay-state-panel" aria-labelledby="state-title">
+        <div class="section-heading"><h2 id="state-title">Monitor state at this step</h2><span class="section-meta">Recorded simulation state</span></div>
+        <dl class="replay-readouts">
+          <div><dt>Reported packet mode</dt><dd id="replay-reported">Unavailable</dd></div>
+          <div><dt>Commanded state</dt><dd id="replay-commanded">Unavailable</dd></div>
+          <div><dt>Motion authorization</dt><dd id="replay-motion">Unavailable</dd></div>
+          <div><dt>Safety stop latch</dt><dd id="replay-latch">Unavailable</dd></div>
+        </dl>
+        <h3>Retry eligibility</h3><p id="replay-eligibility">Waiting for replay initialization.</p>
+      </section>
+      <div class="replay-grid">
+        <section class="panel replay-evidence-panel" aria-labelledby="evidence-title">
+          <div class="section-heading"><h2 id="evidence-title">Current step evidence</h2><span id="replay-step-number" class="section-meta">Step 0</span></div>
+          <h3 id="replay-step-title">Preparing initial state</h3>
+          <p id="replay-explanation">The replay engine will supply each step’s explanation and computed checks.</p>
+          <div id="replay-evidence"><p class="empty-state">No evidence loaded.</p></div>
+        </section>
+        <section class="panel replay-faults-panel" aria-labelledby="faults-title">
+          <div class="section-heading"><h2 id="faults-title">Detected faults</h2><span id="replay-fault-count" class="count">0</span></div>
+          <div id="replay-faults"><p class="empty-state">Waiting for replay state.</p></div>
+        </section>
+        <section class="panel replay-timeline-panel" aria-labelledby="timeline-title">
+          <div class="section-heading"><h2 id="timeline-title">Progressive incident timeline</h2><span class="section-meta">Executed steps only</span></div>
+          <ol id="replay-timeline" class="replay-timeline"><li class="empty-state">No steps executed.</li></ol>
+        </section>
+        <section class="panel replay-history-panel" aria-labelledby="history-title">
+          <div class="section-heading"><h2 id="history-title">Monitor event history</h2><span class="section-meta">This replay instance</span></div>
+          <ol id="replay-history" class="replay-history"><li class="empty-state">Waiting for replay state.</li></ol>
+        </section>
+      </div>
+    </main>
+    <footer>RoboSentinel / scripted simulation evidence <span>Illustrative thresholds. No certified safety claim.</span></footer>
+  </div>
+</body>
+</html>

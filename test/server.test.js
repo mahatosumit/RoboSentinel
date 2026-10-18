@@ -14,6 +14,10 @@ test('HTTP serves dashboard and modules with security headers, not repository fi
     ['/styles.css', 'text/css', '--accent'], ['/src/monitor.js', 'text/javascript', 'export function createMonitor'],
     ['/src/detector.js', 'text/javascript', 'detectFaults'], ['/src/policy.js', 'text/javascript', 'policyFor'],
     ['/src/simulator.js', 'text/javascript', 'createSimulator'],
+    ['/replay.html', 'text/html', 'Replay safety case'],
+    ['/replay.js', 'text/javascript', 'createIncidentReplay'],
+    ['/replay.css', 'text/css', '.replay-page'],
+    ['/src/incident.js', 'text/javascript', 'export function createIncidentReplay'],
   ]) {
     const response = await fetch(base + path);
     assert.equal(response.status, 200);
@@ -22,7 +26,7 @@ test('HTTP serves dashboard and modules with security headers, not repository fi
     assert.ok(response.headers.get('content-security-policy').includes("default-src 'self'"));
     assert.ok((await response.text()).includes(marker));
   }
-  for (const path of ['/package.json', '/.env', '/.git/config', '/README.md', '/src/nope.js', '/%2e%2e/%2e%2e/etc/passwd', '/%ZZ']) {
+  for (const path of ['/package.json', '/.env', '/.env.example', '/.git/config', '/README.md', '/test/incident.test.js', '/src/nope.js', '/%2e%2e/%2e%2e/etc/passwd', '/%ZZ']) {
     assert.equal((await fetch(base + path)).status, 404);
   }
   assert.equal((await fetch(base, { method: 'POST' })).status, 405);

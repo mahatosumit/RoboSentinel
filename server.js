@@ -9,7 +9,10 @@ const routes = new Map([
   ['/index.html', ['public/index.html', 'text/html']],
   ['/app.js', ['public/app.js', 'text/javascript']],
   ['/styles.css', ['public/styles.css', 'text/css']],
-  ...['simulator', 'detector', 'policy', 'monitor'].map(name => [`/src/${name}.js`, [`src/${name}.js`, 'text/javascript']]),
+  ['/replay.html', ['public/replay.html', 'text/html']],
+  ['/replay.js', ['public/replay.js', 'text/javascript']],
+  ['/replay.css', ['public/replay.css', 'text/css']],
+  ...['simulator', 'detector', 'policy', 'monitor', 'incident'].map(name => [`/src/${name}.js`, [`src/${name}.js`, 'text/javascript']]),
 ]);
 
 export function createAppServer() {
