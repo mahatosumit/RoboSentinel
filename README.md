@@ -229,6 +229,9 @@ Known limitations:
 See [`docs/verification.md`](docs/verification.md) for the baseline, fixes, exact
 verification scope, security findings and untested areas. Counts above describe
 this release verification, not hardware performance or a coverage percentage.
+A separate clean Git checkout also passed offline `npm ci`, all core commands
+and CLI server/asset checks at the documented alternate port 3100. Optional QA
+dependencies and local tool directories were not needed for that reproduction.
 
 ## Reproducible demo from the command line
 

@@ -66,7 +66,7 @@ That statement is not an exhaustive vulnerability-free claim.
 - `npm test`: **51 passed, 0 failed**, no skipped tests.
 - `npm run check`: **15 JavaScript files**, syntax checks only (not a linter).
 - `npm run demo`: **3 scenarios**, all state/safety expectations passed.
-- `make test`: invokes exactly those three commands and is intended offline.
+- `make test`: passed all three commands after offline root `npm ci`.
 - Optional `bash qa/test-debian.sh`: **15 Chromium journeys passed**.
 
 The first reset test was red before its implementation. The browser badge
@@ -97,6 +97,30 @@ Primary text/semantic colour tokens meet >=4.5:1 against white and canvas in
 the automated contrast test. Screenshot review and bounding-box assertions
 checked viewport containment; control heights are >=44px. This does not certify
 all contrast states or WCAG compliance.
+
+## Clean-checkout reproduction
+
+A separate local Git clone of `f9bf10366529e95ea35737e9307b22826296a66a`
+(all final application/test/packaging code and README instructions) was created
+under ignored `.verification/clean-checkout/`; no QA dependencies, browser
+binaries, working-tree overlays or local tools were copied into that clone.
+
+Executed there, in order:
+
+1. `npm ci --ignore-scripts --offline --no-audit --no-fund` — passed.
+2. `npm test` — 51 passed, 0 failed, no skips.
+3. `npm run check` — 15 JavaScript files passed.
+4. `npm run demo` — all 3 scenarios passed.
+5. Start `node server.js` (the package start entrypoint) with `HOST=127.0.0.1`
+   and the documented alternate `PORT=3100` — printed the correct address.
+6. Seven dashboard/module asset routes returned 200; four forbidden/unknown
+   paths returned 404. The child server was then stopped.
+7. Clone working tree remained clean after the documented core checks.
+
+The original default `127.0.0.1:3000` server was also HTTP-smoke checked.
+This is a fresh checkout on the available Debian/Node environment, not a
+Docker build or a test on every Linux distribution. The final documentation
+receipt commit may follow this tested snapshot without changing application code.
 
 **NOT TESTED:** Safari, Firefox, physical mobile devices, manual screen-reader
 usability, real hardware, performance/load metrics and durable log retention.
