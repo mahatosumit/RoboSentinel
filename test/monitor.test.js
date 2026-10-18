@@ -105,8 +105,52 @@ test('shutdown needs confirmation, prevents all motion until reset', () => {
   assert.ok(m.command('shutdown', { confirmed: true }).ok);
   m.tick(); assert.equal(m.snapshot().shutdown, true);
   for (const action of ['start', 'retry', 'return-to-base']) assert.equal(m.command(action, { confirmed: true }).ok, false);
-  assert.ok(m.command('reset').ok);
+  const before = m.snapshot();
+  assert.equal(m.command('reset').ok, false);
+  assert.equal(m.snapshot().shutdown, true); assert.equal(m.snapshot().latched, true);
+  assert.deepEqual(m.snapshot().events.slice(0, -1), before.events);
+  assert.ok(m.command('reset', { confirmed: true }).ok);
   assert.equal(m.snapshot().shutdown, false); assert.equal(m.snapshot().mode, 'idle');
+  assert.match(m.snapshot().events.at(-1).message, /safety latch true; shutdown true/);
+});
+
+test('reset requires explicit confirmation and preserves the audit trail', () => {
+  const m = createMonitor();
+  m.inject('overheating');
+  const before = m.snapshot();
+  for (const options of [undefined, null, { confirmed: false }, { confirmed: 'yes' }, { confirmed: 1 }]) {
+    const prior = m.snapshot();
+    assert.equal(m.command('reset', options).ok, false);
+    const rejected = m.snapshot();
+    assert.deepEqual(rejected.events.slice(0, -1), prior.events);
+    assert.equal(rejected.events.at(-1).type, 'command-rejected');
+    assert.deepEqual({ ...rejected, events: [] }, { ...prior, events: [] });
+  }
+  assert.deepEqual(m.snapshot().injections, ['overheating']);
+  assert.ok(m.snapshot().faults.some(f => f.id === 'motor-overheating'));
+  assert.ok(m.snapshot().events.some(e => e.type === 'command-rejected'));
+  assert.equal(m.command('reset', { confirmed: true }).ok, true);
+  const after = m.snapshot();
+  assert.deepEqual(after.injections, []);
+  assert.deepEqual(after.faults, []);
+  assert.equal(after.mode, 'idle');
+  assert.equal(after.latched, false);
+  assert.equal(after.motionEnabled, false);
+  assert.equal(after.telemetry.motor.state, 'stopped');
+  assert.ok(after.events.length > before.events.length);
+  assert.equal(after.events.at(-1).type, 'reset');
+  assert.match(after.events.at(-1).message, /faults \[motor-overheating\]; injections \[overheating\]; safety latch true/);
+});
+
+test('confirmed reset rechecks unsafe configured initial conditions and stays stopped', () => {
+  const m = createMonitor({ motorTempC: 95 });
+  assert.ok(m.command('reset', { confirmed: true }).ok);
+  const after = m.snapshot();
+  assert.equal(after.mode, 'faulted');
+  assert.equal(after.latched, true);
+  assert.equal(after.motionEnabled, false);
+  assert.equal(after.telemetry.motor.state, 'stopped');
+  assert.ok(after.faults.some(f => f.id === 'motor-overheating'));
 });
 
 test('multiple faults, lifecycle timestamps, no repeated alerts, escalation and reset audit', () => {
@@ -120,7 +164,7 @@ test('multiple faults, lifecycle timestamps, no repeated alerts, escalation and 
   m.inject('overheating'); m.inject('obstacle');
   assert.deepEqual(m.snapshot().faults.map(f => f.severity), ['critical', 'critical', 'warning']);
   m.clear('overheating'); assert.ok(m.snapshot().events.some(e => e.type === 'fault-cleared'));
-  const before = m.snapshot(); m.command('reset'); const after = m.snapshot();
+  const before = m.snapshot(); m.command('reset', { confirmed: true }); const after = m.snapshot();
   assert.deepEqual(after.injections, []); assert.deepEqual(after.faults, []);
   assert.equal(after.latched, false); assert.equal(after.mode, 'idle');
   assert.ok(after.events.length > before.events.length);
@@ -140,5 +184,10 @@ test('snapshot isolation, bounded events, deterministic reset and invalid comman
   for (let i = 0; i < 350; i++) a.command('inspect');
   assert.equal(a.snapshot().events.length, 300);
   assert.equal(new Set(a.snapshot().events.map(e => e.id)).size, 300);
+  const history = a.snapshot().events;
+  a.command('reset', { confirmed: true });
+  assert.equal(a.snapshot().events.length, 300);
+  assert.deepEqual(a.snapshot().events.slice(0, -1), history.slice(1));
+  assert.equal(a.snapshot().events.at(-1).type, 'reset');
   assert.throws(() => createMonitor({ startTime: NaN }), /startTime/);
 });

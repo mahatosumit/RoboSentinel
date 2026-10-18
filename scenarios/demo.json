@@ -30,7 +30,7 @@
       { "op": "inject", "name": "obstacle", "expect": { "motionEnabled": false } },
       { "op": "inject", "name": "sensor-failure", "expect": { "faults": ["sensor-failure", "low-battery", "obstacle-blockage"] } },
       { "op": "command", "action": "retry", "confirmed": true, "expect": { "ok": false } },
-      { "op": "command", "action": "reset", "expect": { "mode": "idle", "faults": [], "latched": false, "motionEnabled": false } }
+      { "op": "command", "action": "reset", "confirmed": true, "expect": { "mode": "idle", "faults": [], "latched": false, "motionEnabled": false } }
     ]
   }
 ]

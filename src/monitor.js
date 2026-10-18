@@ -117,12 +117,14 @@ export function createMonitor(config = {}) {
   }
   function reject(message) { log('command-rejected', message); return { ok: false, message }; }
   function command(action, options = {}) {
+    if (action === 'reset' && options?.confirmed !== true) return reject('reset requires explicit operator confirmation.');
     evaluate();
     if (action === 'reset') {
+      const cleared = `faults [${faults.map(f => f.id).join(', ')}]; injections [${[...simulator.injections].sort().join(', ')}]; safety latch ${latched}; shutdown ${shutdown}`;
       simulator.reset(); faults = []; gapFault = null; latched = false; shutdown = false;
       mission = null; recoveryMs = 0; returnMs = 0; setMode('idle');
       evaluate();
-      log('reset', 'Simulation plant reset to configured initial state. History preserved; motion remains disabled.');
+      log('reset', `Operator confirmed simulation reset. Cleared prior state: ${cleared}. Plant restored to configured initial state. History preserved; motion remains disabled.`);
       return { ok: true, message: 'Simulation reset. Robot idle unless configured initial conditions require a stop.' };
     }
     if (action === 'inspect') {
