@@ -5,6 +5,60 @@ an independent user study, or a prediction of winning. Technical observations
 below are supported by source/tests; usefulness and competitive value are
 explicit engineering judgments. Baseline: `514e552`; implemented replay: `af705d3`.
 
+## Current mission follow-up — 19 October 2026
+
+**Verdict: BLOCKED**, not submitted. The observations in sections A–I below are
+the earlier replay-integration review; this follow-up supersedes their current
+counts and release/account status, without erasing historical receipts.
+
+The official guide was read again. Joining closes **19 October 23:59 IST**;
+submission locks **20 October 23:59 IST**, by the server clock. At the fresh
+baseline check the clock read **19 October 02:00:04 IST**. No numerical scoring
+weights were found or invented. The user now attests that all generative-AI work
+was inside OmniRush. That is not an organizer ruling; registration, connected
+identity, selected sessions, form limits and receipt remain unverified. The
+dashboard timed out and no signed-in event page was inspected.
+
+### Skeptical judge matrix
+
+| Criterion | Challenge | Current answer | Unproven | Smallest next experiment | Independent check |
+| --- | --- | --- | --- | --- | --- |
+| It works | Can a frozen but not-yet-stale reading authorize recovery? | Reproduced that defect, added failing regressions, fixed core completion gate; 70 tests and 19 Chromium journeys pass | Hardware behaviour, arbitrary external observations, full state-space correctness | Run `npm run verify` and `test/recovery.test.js`; repeat the recorded real-monitor sequence | A separate clean clone passed; replay exports are compared with actual monitor execution |
+| It's worth using | Does this help anyone beyond the author? | Plausible task for robotics students/simulation reviewers: identify what evidence permits restart and explain rejected commands | No genuine user study, adoption or measured time/error benefit | Give a relevant person the replay; ask for earliest permitted restart, evidence and a JSON export; record confusion without coaching | Compare their actual explanation with the executed frames; no evaluation has been conducted yet |
+| It rebuilds | Can a judge reproduce it without local caches or hidden files? | Clean clone, empty-cache offline root install, full verification and startup passed; browser package lock freshly installed | Docker build/start/export and new hosted Docker job | Publish normally, then execute the uncached Docker job | Check run SHA, offline container test, nonroot health and routes; separately exercise container-backed JSON export |
+| OmniRush built it | Do sessions and provenance support the submitted code? | User's OmniRush-only attestation; current app confirms genuine session `ses_eafe2618cffet1eYYTRdyKzeRT`; actual Git history preserved | Organizer acceptance and account/session selection | Sign into official dashboard with connected account; inspect and select genuine sessions | Organizer-visible session selection and actual submission receipt, not Git trailers alone |
+
+### Highest-risk counterexample and bounded correction
+
+At baseline `9f47439`, stop for heat, clear heat, confirm retry, freeze either the
+link or sensor, then tick 1000 ms. The old controller enabled motion and cleared
+its latch with an unchanged source timestamp because its age had not exceeded
+3000 ms. Two new regressions first failed on `motionEnabled: true`.
+
+Fix **`a5607b2f9cc478e9e43c69ba4fa473c342cf6310`** requires packet, heartbeat and
+sensor timestamps to equal the simulated completion update. Missing sources
+cancel recovery, retain a stop and record `recovery-blocked`. Ten added tests
+cover both recovery actions, freezes before/partway through recovery, zero-time
+and repeated commands, restored sources, healthy split ticks and safe reset.
+The original 60 tests and 12 replay steps remain intact. No diagnosis is based
+on hidden injection flags. Exact-time equality is appropriate to this synchronous
+simulator, not a validated external-network timing contract.
+
+Fresh clone at `a5607b2` passed **70 tests, 19 syntax files, three original
+scenarios, all 12 replay steps, real startup/route checks and 19 Chromium
+journeys**, including actual JSON download and two intentional module failures.
+Browser dependencies came from the QA lockfile; browser binaries and OS libraries
+were existing host prerequisites, not a fresh OS installation. The checkout
+remained clean. Two current local screenshots were also visually inspected; this
+is not a manual accessibility audit. No human user evaluation or video was made.
+
+Public `main` is **`5b256f003302b06dcebb0f3e6a02fdf8ad093ab3`**, with 55 files
+anonymously byte-checked and successful core-only CI run **39162618858**. The
+later packaging/recovery commits are not published: a normal push failed for
+missing HTTPS authentication. Docker remains **BLOCKED locally / NOT RUN**;
+the configured Docker job has no successful receipt yet. Do not submit or claim
+the public source includes the fix until the release SHA is verified remotely.
+
 ## A. Official competition assessment
 
 Source: [organizer's full event guide](https://omnirush.ai/buildathon), fetched

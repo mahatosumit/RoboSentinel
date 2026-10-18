@@ -411,3 +411,57 @@ creation is denied. Publishing this commit and observing that job, or executing
 the documented commands on a Docker host, remains necessary for container proof.
 The preceding published core-only CI at `5b256f0` passed as run 39162618858;
 it cannot establish the newly added Docker job's result.
+
+## Adversarial recovery audit — 19 October 2026
+
+Rechecked baseline **`9f47439`**: **60 tests, 18 syntax files**, three
+scenarios and all 12 replay steps passed. Public `main` remained `5b256f0`, two
+commits behind that local baseline. Complete working/index diffs showed only
+the preserved README mode delta. Organizer rules were fetched again, and the
+user explicitly attested OmniRush-only generative-AI assistance; account and
+organizer acceptance remain unverified. App context confirmed the genuine
+project session/title again. No other session or receipt was invented.
+
+Source inspection traced simulator sampling through monitor evaluation, policy,
+command revalidation, recovery completion, incident snapshots and browser export.
+Graph tools were not exposed; evidence is bounded source/test inspection, not a
+complete graph or exhaustive state-space audit. No external telemetry ingest or
+backward-step API exists: arbitrary duplicated/out-of-order incoming messages
+cannot be claimed tested through a nonexistent interface. Packet validation and
+frozen observations are covered at the actual available boundaries.
+
+**Confirmed defect / RED:** after a latched heat stop was cleared, confirm retry,
+freeze communication or sensor data, then tick 1000 ms. Both variants enabled
+motion with an unchanged source timestamp and no stale fault yet. The two
+regressions in `test/recovery.test.js` failed with expected false / actual true
+for motion authorization before implementation changed.
+
+**Fix / GREEN:** `a5607b2f9cc478e9e43c69ba4fa473c342cf6310` adds a current-update
+packet/heartbeat/sensor check at recovery completion. Missing observations cause
+latched stop and a source-specific `recovery-blocked` event. The original stale
+timeout, original tests and fixed 12-step replay are preserved. Ten regressions
+cover retry/return-to-base, freeze before/at/partway through checking, zero-time
+and repeated confirmation, restored observations without automatic restart,
+healthy split ticks, and reset after blocked recovery.
+
+A fresh `--no-local` clone of `a5607b2` passed empty-cache offline root install
+and `npm run verify`: **70 tests, zero failures/skips; 19 syntax files; three
+original scenarios and all 12 replay steps**. Actual entrypoint startup passed
+12 asset routes, four forbidden paths, HEAD and security headers. QA dependencies
+were freshly installed from `qa/package-lock.json` into that clone; all **19
+Chromium journeys** passed, including downloaded JSON inspection, keyboard/narrow
+layouts, confirmation revalidation, offline computation and intentional HTTP503/
+aborted-module failures. Existing browser binaries, fonts and libraries were
+used as host prerequisites; this is not fresh-OS provisioning. Clone stayed clean.
+
+The current-tracked-file scan covers **56 files** with the new regression file;
+no tested credential/workspace/home-path patterns matched. No tracked screenshot
+was changed; two fresh ignored captures were visually inspected. This does not
+prove all browsers, assistive technologies, privacy/security cases or hardware.
+
+Public `5b256f0` was independently byte-checked again (55 files, seven PNGs), with
+successful core-only CI run 39162618858. A normal ancestor-checked push failed
+for unavailable HTTPS credentials, so the later release is not published.
+Docker/Podman/Buildah remain unavailable here; container build/start/export and
+the new hosted Docker job are **BLOCKED / NOT RUN**, not passed. No human user
+study, recording, authenticated form inspection or submission receipt exists.

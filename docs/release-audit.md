@@ -1,9 +1,38 @@
 # RoboSentinel — final release audit
 
-**Verdict: SUBMIT AFTER SPECIFIC FIXES.** Implementation is frozen. Publication,
+**Current verdict: BLOCKED.** See the current mission follow-up below. Earlier
+verdict: SUBMIT AFTER SPECIFIC FIXES. Implementation is frozen. Publication,
 container execution and the actual event submission are not completed merely
 because local tests pass. Checked **19 October 2026 (IST)**, beginning at
 00:52:24 IST. Baseline: `c3a293b9311947a62ea5ceac64e4c4a670e3185a`.
+
+## Current mission follow-up — 19 October 2026
+
+Fresh baseline HEAD was `9f47439`, not `469c837`; full staged diff was empty and
+the only unstaged change was the user's existing README executable bit. Public
+`main` is `5b256f003302b06dcebb0f3e6a02fdf8ad093ab3`; all 55 published files were
+anonymously retrieved/byte-checked again. CI run 39162618858 succeeded for that
+SHA, not for later local changes.
+
+The technical audit found and fixed a real below-timeout recovery freshness
+counterexample in **`a5607b2f9cc478e9e43c69ba4fa473c342cf6310`**. A separate clean
+clone passed 70 tests, 19 syntax checks, three scenarios, all 12 replay steps,
+startup/route checks and 19 Chromium journeys with actual export inspection.
+See [competition-review.md](competition-review.md) for the skeptical criterion
+matrix and [verification.md](verification.md) for red/green evidence and scope.
+
+The user now attests OmniRush-only generative-AI use. That is not organizer
+acceptance. Rules/deadlines were re-read; the genuine current session is
+confirmed in app context, but registration, connected identity, form limits,
+selected sessions and a submission receipt remain unverified. Dashboard opening
+timed out; no event write was dispatched.
+
+A normal push was attempted only after confirming the remote is an ancestor;
+HTTPS authentication was unavailable, so the release fix is **not published**.
+No force-push, history rewrite, remote recreation or discarded work occurred.
+Docker is unavailable locally and the new Docker CI job has not run. Human user
+evaluation and video are NOT RUN; physical validation/certification is not claimed.
+The older snapshots below remain historical, not evidence of current completion.
 
 ## Publication update — source and CI verified
 

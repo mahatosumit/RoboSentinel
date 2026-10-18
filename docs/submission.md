@@ -1,8 +1,9 @@
 # OmniRush Frontier Buildathon 2026 — submission draft
 
 **Status: BLOCKED / no verified submission.** Public source and hosted CI are
-verified; account eligibility, exclusive-AI compliance and actual form/receipt
-validation remain pending. No demo, recording or submission receipt is invented.
+verified for `5b256f0`, not the later local release. The user attests OmniRush-only
+AI assistance; organizer account eligibility and actual form/receipt validation
+remain pending. No demo, recording or submission receipt is invented.
 Do not submit automatically: the user must review the completed fields and
 explicitly authorize submission.
 
@@ -22,9 +23,9 @@ Checked on **19 October 2026 (Asia/Calcutta, IST / UTC+05:30)**:
 | --- | --- | --- |
 | Submission deadline | **20 October 2026, 11:59 PM IST** (UTC **20 October, 18:29**); locks by server clock | No verified submission receipt |
 | Join/registration cutoff | **19 October 2026, 11:59 PM IST** (UTC **19 October, 18:29**) for prize eligibility | Individual registration/join state unverified |
-| Participation | Online, solo; OmniRush must be the only generative AI tool used for code/text/images | Work here used OmniRush; personal/overall eligibility requires user confirmation |
+| Participation | Online, solo; OmniRush must be the only generative AI tool used for code/text/images | User confirmed OmniRush-only generation on 19 October; attestation is not organizer approval |
 | Fresh work | Start fresh during the event; judges compare code to genuine OmniRush sessions | Original empty workspace and project session are documented; organizer acceptance not claimed |
-| GitHub | GitHub account at least **3 days old**; public repository on the account connected to the event | Named account `mahatosumit` was created in 2021; public source at `bc8ec53` verified. Event-connected identity remains unverified |
+| GitHub | GitHub account at least **3 days old**; public repository on the account connected to the event | Named account `mahatosumit` was created in 2021; public source at `5b256f0` verified. Event-connected identity remains unverified |
 | Required evidence | Repository with README and the OmniRush sessions used to build it | Public README/source verified; genuine app-local session pointer prepared; form session selections pending |
 | Video | **Optional**, recommended **2–3 minutes** | Presenter script and screenshots exist; no video recorded/uploaded |
 | Live link | **Optional** | Local dashboard only; no public app hosting |
@@ -58,11 +59,11 @@ BLOCKED** until the actual title/description fields are inspected.
 ## Links and demonstration
 
 - **Public repository URL: VERIFIED**, https://github.com/mahatosumit/RoboSentinel.
-  Verified public snapshot: **`bc8ec53a69cf8f080e2dbdcfb446af6220a7b95e`**. Anonymous GitHub
+  Verified public snapshot: **`5b256f003302b06dcebb0f3e6a02fdf8ad093ab3`**. Anonymous GitHub
   page/README/licence are accessible; all **55 tracked files**, including source
   and seven screenshots, were retrieved and byte-checked against Git objects.
 - **Hosted CI: PASSED** for that exact commit:
-  https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943.
+  https://github.com/mahatosumit/RoboSentinel/actions/runs/39162618858.
   Offline installation, tests, syntax and demos passed; Docker/browser QA are
   not jobs in that workflow. Interactive Mermaid rendering is not verified.
 - **Public demo/video URL: NOT AVAILABLE.** Neither is mandatory per the guide;
@@ -86,9 +87,16 @@ BLOCKED** until the actual title/description fields are inspected.
 5. Latest-300-event in-memory history retained across confirmed resets.
 6. Zero-dependency runtime, three acceptance scenarios and a browser/CLI replay
    with actual snapshots, computed checks, mismatch refusal and JSON download.
-7. Fresh verification: **60 tests**, **18 syntax-checked files**, **3 scenarios
+7. Fresh local verification at `a5607b2`: **70 tests**, **19 syntax-checked files**, **3 scenarios
    plus all 12 replay steps**, and **19 isolated Chromium journeys** passed.
-8. Clean checkout at `d1884be` passed offline root installation and `make test`.
+8. Clean checkout at `a5607b2` passed empty-cache offline root installation,
+   `npm run verify`, startup checks and 19 browser journeys. Browser dependencies
+   were installed from their lockfile; existing browser binaries/libs were reused.
+9. Recovery now rejects frozen observations even below the ordinary stale timeout;
+   packet, heartbeat and sensor evidence must match the completion update.
+
+The local release is not yet published. A normal push failed because the Linux
+Git environment lacks HTTPS credentials; no remote history was overwritten.
 
 ## Known limitations
 
@@ -118,8 +126,9 @@ this workflow, then reviewed/integrated and tested in the parent. Git history
 dates fall within the event window; timestamps alone are not proof of original
 work or organizer acceptance. Do not invent or backfill additional sessions.
 
-The built-in browser's attempt to open the event dashboard timed out and a
-subsequent tab listing was empty. No signed-in page was inspected and no write
+The latest built-in browser attempt to open the event dashboard timed out; a
+subsequent listing contained only the existing local replay tab. No signed-in
+event page was inspected and no write
 or submission action was dispatched. The extension action inventory exposed no
 GitHub/publication action that resolves Linux CLI authentication. Publication
 has since been performed from the user's terminal and independently verified.
@@ -129,11 +138,14 @@ has since been performed from the user's terminal and independently verified.
 - [ ] Verify event join/registration, solo eligibility and the connected GitHub
   account's age/identity in the user's dashboard.
 - [x] Publish `main` on the named account and verify anonymous repository,
-  README/source/licence/seven images at `bc8ec53`; event-connected identity is
+  README/source/licence/seven images at `5b256f0`; event-connected identity is
   a separate unchecked requirement above.
 - [x] Verify actual hosted CI for the published commit.
-- [ ] Resolve exclusive-generative-AI eligibility through truthful provenance
-  review and organizer clarification where needed; do not infer it from CI or metadata alone.
+- [x] Obtain the user's explicit OmniRush-only generation attestation; preserve
+  historical observations and do not treat attribution metadata as proof.
+- [ ] Verify organizer eligibility/account acceptance; seek clarification if
+  evidence of outside AI use appears. No exception or waiver is assumed.
+- [ ] Publish the later local recovery fix and verify CI for that exact release.
 - [ ] Inspect title/description limits and required fields in the live form.
 - [ ] Select only genuine project sessions and Open Frontier if appropriate.
 - [ ] Add a real video/live link only if one is made and checked; they are optional.

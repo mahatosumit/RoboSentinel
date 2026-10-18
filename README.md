@@ -36,7 +36,7 @@ requires explicitly confirmed, freshly checked recovery.
 | Hosted core CI | **VERIFIED at `5b256f0`** | [Run 39162618858 passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39162618858); the newly added Docker job still needs its first run |
 | Docker image | **NOT TESTED** | Recipe exists; no container engine is available in this workspace |
 | Hardware, Safari/Firefox and manual screen-reader use | **NOT TESTED** | Outside the current evidence |
-| Public source release | **VERIFIED** | Published `bc8ec53`; all 55 tracked files, including seven screenshots, anonymously retrieved and byte-checked |
+| Public source snapshot | **VERIFIED at `5b256f0`** | All 55 published files, including seven screenshots, anonymously byte-checked; later local recovery fix still awaits publication |
 | Buildathon entry | **NOT VERIFIED** | Registration, connected identity, exclusive-AI eligibility, form limits and organizer receipt remain pending |
 
 These are scoped software/publication checks, not coverage percentages, deployment
@@ -334,7 +334,7 @@ Fresh Linux verification of the current implementation:
 | `npm run check` | **19 JavaScript files passed** | Syntax only, not a linter/typechecker |
 | `npm run demo` | **3 scenarios and all 12 asserted replay steps passed** | Synthetic cases, not field trials |
 | `bash qa/test-debian.sh` | **19 automated Chromium journeys passed** | Not Safari/Firefox, native Windows or manual screen-reader certification |
-| Separate clean Git checkout at `96a7f82` | Empty-cache offline install, `npm run verify` and real startup/route smoke passed; checkout stayed clean | Not a Docker build or all-Linux-distribution test |
+| Separate clean Git checkout at `a5607b2` | Empty-cache offline install, full verification, startup/route smoke and all 19 browser journeys passed; checkout stayed clean | Browser binaries/libs reused as installed prerequisites; not Docker or a fresh OS |
 
 Browser checks exercise normal/stacked faults, stale timeouts, commanded versus
 reported state, confirmation revalidation, keyboard controls, reset evidence,
@@ -415,9 +415,9 @@ are permitted with its notice retained; the software is provided without warrant
 - [Official Frontier Buildathon 2026 guide](https://omnirush.ai/buildathon)
 
 **Verified public snapshot (19 October 2026):**
-`bc8ec53a69cf8f080e2dbdcfb446af6220a7b95e`. The anonymous GitHub page presents the
+`5b256f003302b06dcebb0f3e6a02fdf8ad093ab3`. The anonymous GitHub page presents the
 README and MIT licence; all 55 tracked files, including seven PNGs, were retrieved
-and matched against Git objects. [Hosted CI passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943)
+and matched against Git objects. [Hosted CI passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39162618858)
 for that exact commit. Interactive Mermaid rendering and Docker execution are
 not verified. No hosted application, video, package release or completed
 Buildathon submission is claimed. Registration, exclusive-AI eligibility and
