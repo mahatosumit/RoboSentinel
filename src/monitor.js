@@ -101,8 +101,16 @@ export function createMonitor(config = {}) {
         if (!eligible[mission]?.allowed) {
           latched = true; stop(); log('recovery-blocked', 'Recovery cancelled: interlocks changed during the recovery check.');
         } else if (recoveryMs <= 0) {
-          latched = false; setMode('navigating');
-          log('recovery-complete', `${mission} recovery check passed; simulated motion enabled.`);
+          const missing = [
+            ['packet', telemetry.timestamp], ['heartbeat', telemetry.heartbeat], ['sensor', telemetry.sensor.timestamp],
+          ].filter(([, timestamp]) => timestamp !== now).map(([name]) => name);
+          if (missing.length > 0) {
+            latched = true; stop();
+            log('recovery-blocked', `Recovery cancelled: missing fresh ${missing.join(', ')} observations from the current monitoring update.`);
+          } else {
+            latched = false; setMode('navigating');
+            log('recovery-complete', `${mission} recovery check passed; simulated motion enabled.`);
+          }
         }
       } else if (previousMode === 'navigating' && mode === 'navigating' && mission === 'return-to-base') {
         returnMs -= step;

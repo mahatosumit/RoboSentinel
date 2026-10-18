@@ -29,8 +29,8 @@ requires explicitly confirmed, freshly checked recovery.
 
 | Area | Status | Evidence / scope |
 | --- | --- | --- |
-| Core behaviour, incident replay, HTTP surface and contrast tokens | **VERIFIED** | 60 tests passed; no failures or skips |
-| JavaScript syntax and deterministic demos | **VERIFIED** | 18 files; 3 scenarios plus the 12-step safety replay passed |
+| Core behaviour, incident replay, HTTP surface and contrast tokens | **VERIFIED** | 70 tests passed; no failures or skips |
+| JavaScript syntax and deterministic demos | **VERIFIED** | 19 files; 3 scenarios plus the 12-step safety replay passed |
 | Rendered cockpit and replay | **VERIFIED** | 19 automated Chromium journeys, including export, keyboard and narrow layouts |
 | Clean local checkout | **VERIFIED** | Offline root install, checks and server/route smoke tests passed |
 | Hosted core CI | **VERIFIED at `5b256f0`** | [Run 39162618858 passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39162618858); the newly added Docker job still needs its first run |
@@ -166,7 +166,7 @@ In another terminal at the project root:
 npm run verify
 ```
 
-This is the **single full verification command**: it runs `npm test` (60 tests),
+This is the **single full verification command**: it runs `npm test` (70 tests),
 `npm run check` (syntax) and `npm run demo` (asserted scenarios and replay), without
 network access or browser downloads. `make test` is an alias on systems with GNU
 Make; Make is not required for the npm command or the Docker image.
@@ -295,7 +295,12 @@ The key invariant is **clear cause ≠ authorize motion**.
 2. Start cannot bypass a latch, shutdown or any active fault.
 3. Retry requires no active faults and explicit confirmation. It enters
    `recovering` with motion disabled, then performs a fresh one-second monitored
-   check; a changed interlock cancels recovery.
+   check; a changed interlock cancels recovery. At completion, packet, heartbeat
+   and sensor timestamps must all match that simulated monitoring update. A
+   frozen reading can still be within the ordinary stale timeout yet is not new
+   recovery evidence: the check cancels, keeps the latch and records the missing
+   observation sources. This exact-time requirement belongs to the synchronous
+   simulator, not a validated timing rule for external robot streams.
 4. Confirmed return-to-base permits only a healthy scene or warning-level low
    battery, with charge >10% and voltage >21 V. After the recovery check, its
    five-second transit ends at idle. There is no route planning or charging model.
@@ -325,8 +330,8 @@ Fresh Linux verification of the current implementation:
 
 | Evidence | Outcome | What it does not prove |
 | --- | --- | --- |
-| `npm test` | **60 passed, 0 failed, 0 skipped** | No hardware or coverage-percentage claim |
-| `npm run check` | **18 JavaScript files passed** | Syntax only, not a linter/typechecker |
+| `npm test` | **70 passed, 0 failed, 0 skipped** | No hardware or coverage-percentage claim |
+| `npm run check` | **19 JavaScript files passed** | Syntax only, not a linter/typechecker |
 | `npm run demo` | **3 scenarios and all 12 asserted replay steps passed** | Synthetic cases, not field trials |
 | `bash qa/test-debian.sh` | **19 automated Chromium journeys passed** | Not Safari/Firefox, native Windows or manual screen-reader certification |
 | Separate clean Git checkout at `96a7f82` | Empty-cache offline install, `npm run verify` and real startup/route smoke passed; checkout stayed clean | Not a Docker build or all-Linux-distribution test |
