@@ -329,7 +329,7 @@ Fresh Linux verification of the current implementation:
 | `npm run check` | **18 JavaScript files passed** | Syntax only, not a linter/typechecker |
 | `npm run demo` | **3 scenarios and all 12 asserted replay steps passed** | Synthetic cases, not field trials |
 | `bash qa/test-debian.sh` | **19 automated Chromium journeys passed** | Not Safari/Firefox, native Windows or manual screen-reader certification |
-| Separate clean Git checkout at `d1884be` | Offline install and `make test` passed; no working-tree tool overlay | Not a Docker build or all-Linux-distribution test |
+| Separate clean Git checkout at `96a7f82` | Empty-cache offline install, `npm run verify` and real startup/route smoke passed; checkout stayed clean | Not a Docker build or all-Linux-distribution test |
 
 Browser checks exercise normal/stacked faults, stale timeouts, commanded versus
 reported state, confirmation revalidation, keyboard controls, reset evidence,

@@ -360,3 +360,54 @@ https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943.
 Anonymous retrieval/byte checks were repeated for all 55 files at this snapshot.
 Metadata changes do not by themselves establish the underlying tool use or
 exclusive-AI eligibility. That organizer/account gate remains unverified.
+
+## Clean-Linux rebuild checklist — 19 October 2026
+
+Packaging change **`96a7f82db4e6f6dc71f0839acdad23ab3b010a16`** was tested in a
+separate, fresh local Git clone made with `git clone --no-local`. No ignored
+workspace tools, downloaded browsers, environment files or existing npm cache
+were copied into that checkout. The installed host runtime was Node **22.23.3**
+and npm **10.9.9** on Debian Linux; this is not a freshly provisioned host or a
+Docker result.
+
+| Requested item | Result |
+| --- | --- |
+| Git repository with commits | Existing history preserved; packaging changes committed in `96a7f82` |
+| Dependency lockfile | Root `package-lock.json` v3 retained and aligned; root has zero dependencies; optional browser QA retains its own lockfile |
+| Runtime pinned | `.nvmrc`, manifest/lock engine and Docker base agree on Node 22.23.3; manifest records npm 10.9.9 |
+| Dockerfile builds and runs | Recipe retained, full verification used during build, nonroot/default startup/healthcheck preserved; **execution NOT TESTED here** |
+| One test command | `npm run verify` runs tests, syntax and deterministic demos offline; `make test` delegates to it |
+| README setup/run/test | Clean clone, exact prerequisites, native commands, Docker build/offline-test/run and optional settings documented |
+| Settings without secrets | `.env.example` documents only HOST/PORT; Node's explicit `--env-file` loader verified; local environment files remain ignored/excluded |
+| No machine-specific paths | Bounded checks of all **55 current tracked files**, including binary bytes, found no tested workspace/home-path patterns |
+
+Actual fresh-checkout results:
+
+- Offline `npm ci --cache .tools/npm-cache --ignore-scripts --offline --no-audit
+  --no-fund` passed using a new, initially absent cache in the ignored tools
+  directory. No dependency download or global installation was needed.
+- `npm run verify` passed **60 tests, zero failures/skips**, syntax checks for
+  **18 JavaScript files**, **three original scenarios** and **12 replay steps**.
+  The `make test` alias also passed in the primary checkout.
+- The actual `server.js` entrypoint started on a temporary loopback port;
+  **12 assets, four forbidden routes, HEAD and security headers** passed. The
+  smoke-check child was stopped afterward.
+- Runtime/manifest/lock/Docker version alignment, `.env.example` loading, **55
+  local Markdown links/anchors** and seven PNG signatures/dimensions passed.
+- Current-tracked-file credential-pattern checks found no tested GitHub/cloud/
+  AI-key, private-key or credential-URL formats. This is a bounded scan, not proof
+  that every possible secret is absent; ignored private files and historical
+  objects are not covered by this current-release check. The historical path
+  limitation recorded above remains; no history rewrite was performed.
+- Fresh checkout remained clean after all checks. Application behaviour, tests,
+  screenshots and optional browser tooling were not changed.
+
+The CI workflow now adds a separate Docker job: uncached/pulled build, full
+verification with `--network none`, default-image nonroot startup, bounded health
+polling and actual cockpit/replay/module HTTP probes. YAML parsing and all Bash
+run-block syntax passed locally. **The new Docker job has not run yet.** No local
+Docker/Podman/Buildah engine or Docker socket is available, and namespace
+creation is denied. Publishing this commit and observing that job, or executing
+the documented commands on a Docker host, remains necessary for container proof.
+The preceding published core-only CI at `5b256f0` passed as run 39162618858;
+it cannot establish the newly added Docker job's result.
