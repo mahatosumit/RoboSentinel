@@ -149,6 +149,18 @@ test('every executed frame contains computed passing checks and exportable actua
   assert.deepEqual(JSON.parse(JSON.stringify(view)), view);
 });
 
+test('CLI demo runs the same asserted 12-step replay as a browser-independent fallback', () => {
+  const child = spawnSync(process.execPath, ['scripts/demo.js'], {
+    cwd: new URL('../', import.meta.url), encoding: 'utf8',
+  });
+  assert.equal(child.status, 0, child.stderr);
+  assert.match(child.stdout, /Lost link, hidden heat, verified recovery/);
+  assert.match(child.stdout, /step=3 .*reported=navigating .*commanded=faulted .*motion=false/);
+  assert.match(child.stdout, /step=5 .*accepted=false/);
+  assert.match(child.stdout, /step=12 .*commanded=navigating .*motion=true/);
+  assert.match(child.stdout, /All 12 replay steps passed/);
+});
+
 test('independent replays produce equal complete snapshots and cannot advance each other', () => {
   const a = createIncidentReplay();
   const b = createIncidentReplay();
