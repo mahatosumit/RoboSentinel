@@ -10,3 +10,4 @@ test-results/
 .tools/
 .verification/
 docs/evidence/qa-failure.png
+**/font-cache/
