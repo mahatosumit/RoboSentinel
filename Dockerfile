@@ -12,7 +12,7 @@ COPY scripts/ ./scripts/
 COPY scenarios/ ./scenarios/
 COPY test/ ./test/
 COPY LICENSE ./
-RUN npm test && npm run check && npm run demo
+RUN npm run verify
 
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=3000
 USER node

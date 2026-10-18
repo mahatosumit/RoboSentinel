@@ -33,7 +33,7 @@ requires explicitly confirmed, freshly checked recovery.
 | JavaScript syntax and deterministic demos | **VERIFIED** | 18 files; 3 scenarios plus the 12-step safety replay passed |
 | Rendered cockpit and replay | **VERIFIED** | 19 automated Chromium journeys, including export, keyboard and narrow layouts |
 | Clean local checkout | **VERIFIED** | Offline root install, checks and server/route smoke tests passed |
-| Hosted CI | **VERIFIED** | [Run 39161439943 passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39161439943) at published commit `bc8ec53`: offline install, tests, syntax and demos |
+| Hosted core CI | **VERIFIED at `5b256f0`** | [Run 39162618858 passed](https://github.com/mahatosumit/RoboSentinel/actions/runs/39162618858); the newly added Docker job still needs its first run |
 | Docker image | **NOT TESTED** | Recipe exists; no container engine is available in this workspace |
 | Hardware, Safari/Firefox and manual screen-reader use | **NOT TESTED** | Outside the current evidence |
 | Public source release | **VERIFIED** | Published `bc8ec53`; all 55 tracked files, including seven screenshots, anonymously retrieved and byte-checked |
@@ -120,14 +120,28 @@ There is no hosted application or recorded-video link to claim.
 
 ### Requirements
 
-- **Node.js 22.23.3** with npm. This is the verified runtime, pinned in
-  [`.nvmrc`](.nvmrc) and the Dockerfile; `package.json` permits Node 22 or newer.
+- **Node.js 22.23.3**, pinned in [`.nvmrc`](.nvmrc), `package.json`, its lockfile
+  and the Dockerfile; **npm 10.9.9** is recorded in `packageManager`.
 - A modern browser supporting ES modules and native `<dialog>`.
 - A downloaded checkout of this project; open a terminal in its root directory.
 
 There is no compilation step, database, cloud account, external font or API key.
 The root package has zero dependencies. Acquiring Node itself needs a normal
 installation/download; the following application install and checks work offline.
+For a machine without Node installed, use the Docker instructions below: only
+Git and a working Linux-container Docker Engine are needed on the host.
+
+### Get a clean checkout
+
+On a new machine, clone the public repository and enter its directory:
+
+```sh
+git clone https://github.com/mahatosumit/RoboSentinel.git
+cd RoboSentinel
+```
+
+Skip this step if you already have the checkout open. All subsequent commands
+run from its root, with no machine-specific directory names or global npm installs.
 
 ### Install and start
 
@@ -135,7 +149,9 @@ These commands are the same in Windows Command Prompt, PowerShell and Bash:
 
 ```text
 node --version
+npm --version
 npm ci --ignore-scripts --offline --no-audit --no-fund
+npm run verify
 npm start
 ```
 
@@ -147,13 +163,14 @@ Stop the server with **Ctrl+C**. Each browser tab owns a separate in-memory scen
 In another terminal at the project root:
 
 ```text
-npm test
-npm run check
-npm run demo
+npm run verify
 ```
 
-`npm run check` is a syntax check, not a linter or typechecker. On systems with
-GNU Make, `make test` runs all three commands. Browser QA is a separate optional
+This is the **single full verification command**: it runs `npm test` (60 tests),
+`npm run check` (syntax) and `npm run demo` (asserted scenarios and replay), without
+network access or browser downloads. `make test` is an alias on systems with GNU
+Make; Make is not required for the npm command or the Docker image.
+`npm run check` is not a linter or typechecker. Browser QA is a separate optional
 developer installation; see [`qa/README.md`](qa/README.md).
 
 ### Use another port
@@ -169,19 +186,44 @@ Then open `http://127.0.0.1:3100/`. The server defaults to loopback. The supplie
 **not** automatically load `.env` files. Native Windows execution has not been
 tested here; the verified environment is Debian Linux with Node 22.23.3.
 
-### Container recipe
+For an optional local settings file on Linux, use Node's built-in loader:
 
-```text
-docker build -t robosentinel:local .
+```sh
+cp .env.example .env
+node --env-file=.env server.js
+```
+
+Existing shell variables take precedence over the file. No secrets are needed;
+`.env` and other local environment files are excluded from Git and Docker builds.
+Keep the native `HOST=127.0.0.1` default. Do not pass this file unchanged into a
+container: containers need `HOST=0.0.0.0` internally for published ports to work.
+
+### Build, test and run on clean Linux with Docker
+
+Run each command only after the preceding command succeeds:
+
+```sh
+docker build --pull --no-cache -t robosentinel:local .
+docker run --rm --network none robosentinel:local npm run verify
 docker run --rm -p 127.0.0.1:3000:3000 robosentinel:local
 ```
 
-The recipe uses a pinned Node image, offline `npm ci`, build-time core checks,
+Open **http://127.0.0.1:3000/** or **http://127.0.0.1:3000/replay.html**. Stop with
+**Ctrl+C**; `--rm` removes the stopped container. No persistent data is required.
+
+The recipe uses the version-pinned `node:22.23.3-bookworm-slim` image, offline
+`npm ci`, build-time `npm run verify`,
 the nonroot `node` user and a Node-based health check. It binds internally to
 `0.0.0.0` for port mapping; the command above exposes only host loopback.
-After building, judges can run `docker run --rm --network none robosentinel:local npm test`.
+Only explicitly listed application/test files enter the image; local tools,
+browser downloads, `.git` and environment files are excluded. Node/npm are
+supplied by the base image; no extra system packages or host npm installation are
+required. The version tag pins Node, not an immutable operating-system digest.
 **Docker build/run is NOT TESTED in this environment.** No successful container
 deployment is implied, and the base-image pull requires network access.
+The new Docker CI job builds uncached, runs full checks with `--network none`,
+then verifies nonroot startup, container health and actual HTTP routes. It is
+configured, not a passed result, until a pushed run succeeds.
 
 ## Architecture
 
@@ -307,8 +349,9 @@ every security risk has been eliminated.
 
 [`docs/verification.md`](docs/verification.md) records baseline commits, actual
 commands, previous fixes, clean-checkout evidence and untested areas. Runtime,
-dependencies and CI actions are pinned. Hosted CI passed at `bc8ec53`; its job
-does not build Docker or run browser QA. Docker build/run, physical devices,
+dependencies and CI actions are pinned. Hosted core CI passed at `5b256f0`;
+that run did not build Docker or run browser QA. The Docker verification job
+added subsequently has not run yet. Docker build/run, physical devices,
 hardware and performance/load metrics remain **NOT TESTED**.
 
 ## Demo walkthrough

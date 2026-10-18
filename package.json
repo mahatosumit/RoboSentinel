@@ -4,12 +4,14 @@
   "private": true,
   "type": "module",
   "description": "Simulation-first robot monitoring and deterministic safe fault response",
-  "engines": { "node": ">=22" },
+  "engines": { "node": "22.23.3" },
+  "packageManager": "npm@10.9.9",
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
     "demo": "node scripts/demo.js",
-    "check": "node scripts/check.js"
+    "check": "node scripts/check.js",
+    "verify": "npm test && npm run check && npm run demo"
   },
   "license": "MIT"
 }
