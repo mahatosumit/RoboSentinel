@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#236858">
+  <title>RoboSentinel · Simulation cockpit</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to monitoring</a>
+  <div class="simulation-banner"><strong>SIMULATION ONLY</strong><span>Synthetic telemetry · local browser session · no hardware connection</span></div>
+  <div class="shell">
+    <header class="page-header">
+      <div><p class="eyebrow">ROBOT OPERATIONS / SINGLE UNIT</p><h1>RoboSentinel</h1><p class="muted">Independent monitoring. Explicit recovery.</p></div>
+      <div class="session-label"><span class="unit-mark" aria-hidden="true">R / 01</span><span>Indoor mobile robot<br><strong>Simulated plant</strong></span></div>
+    </header>
+    <div id="fatal-error" class="error-panel" role="alert" hidden></div>
+    <noscript><p class="error-panel">JavaScript is required to run this local robot simulation.</p></noscript>
+    <main id="main" tabindex="-1">
+      <section class="panel overview" aria-labelledby="overview-title">
+        <div class="section-heading"><h2 id="overview-title">Robot state</h2><span id="monitor-status" class="badge">Loading monitor</span></div>
+        <div class="overview-grid">
+          <div class="state-readout"><p class="eyebrow">COMMANDED STATE</p><p id="commanded-mode" class="state-value">—</p><p id="motion-state">Waiting for monitor initialization.</p><p class="muted">Reported packet mode: <strong id="reported-mode">—</strong></p></div>
+          <dl class="clock-readout"><div><dt>Simulation time (UTC)</dt><dd id="simulation-time">—</dd></div><div><dt>Wall time (UTC)</dt><dd id="wall-time">—</dd></div><div><dt>Elapsed this session</dt><dd id="elapsed-time">—</dd></div></dl>
+          <div class="run-controls"><button id="start" class="primary" aria-describedby="run-control-reason" disabled>Start mission</button><button id="pause" aria-describedby="run-control-reason" disabled>Pause mission</button><button id="reset" disabled>Reset simulation…</button></div>
+        </div>
+        <p id="run-control-reason" class="monitor-note">Waiting for monitor state.</p>
+        <p class="monitor-note">Safety monitoring advances every second, including when the mission is paused, faulted or shut down. Delayed browser updates account for elapsed wall time.</p>
+      </section>
+      <section id="safety-panel" class="safety-panel" aria-labelledby="safety-title" aria-live="polite" aria-atomic="true"><div><p class="eyebrow">SAFETY INTERLOCK</p><h2 id="safety-title">Initializing</h2></div><p id="safety-detail">Waiting for authoritative monitor state.</p></section>
+      <p id="operator-message" class="operator-message" role="status" aria-live="polite">Initializing local simulation…</p>
+      <div class="dashboard-grid">
+        <section class="panel telemetry-panel" aria-labelledby="telemetry-title"><div class="section-heading"><h2 id="telemetry-title">Live telemetry</h2><span class="section-meta">Synthetic readings</span></div><div id="telemetry" class="telemetry-grid"></div><p id="packet-time" class="footnote">Packet timestamp: —</p></section>
+        <section class="panel faults-panel" aria-labelledby="faults-title"><div class="section-heading"><h2 id="faults-title">Active faults <span id="fault-count" class="count">0</span></h2><span class="section-meta">Highest severity first</span></div><div id="faults"><p class="empty-state">Waiting for first detection pass.</p></div></section>
+        <section class="panel actions-panel" aria-labelledby="actions-title"><div class="section-heading"><h2 id="actions-title">Operator actions</h2><span class="section-meta">Policy-controlled</span></div><p class="muted">Clearing an injected cause never authorizes motion. Review evidence, then explicitly confirm a permitted recovery.</p><div id="actions" class="action-list"></div></section>
+        <section class="panel injection-panel" aria-labelledby="injection-title"><div class="section-heading"><h2 id="injection-title">Fault injection</h2><span class="badge">Simulation tool</span></div><p class="muted">Causes stack and persist until individually cleared or reset. Some faults become detectable only after their stale-data timeout.</p><form id="injection-form"><label for="injection-select">Synthetic fault cause</label><div class="input-row"><select id="injection-select" name="injection" disabled><option value="low-battery">Low battery</option><option value="critical-battery">Critical battery</option><option value="overheating">Motor overheating</option><option value="sensor-failure">Sensor failure</option><option value="sensor-stale">Stale sensor readings</option><option value="communication-loss">Communication loss</option><option value="obstacle">Obstacle blockage</option></select><button id="inject" type="submit" disabled>Inject fault</button></div></form><h3 class="injections-heading">Injected causes <span id="injection-count" class="count">0</span></h3><ul id="injections" class="injection-list"><li class="muted">No causes injected.</li></ul></section>
+        <section class="panel history-panel" aria-labelledby="history-title"><div class="section-heading"><h2 id="history-title">Event history</h2><span id="event-count" class="section-meta">0 / 300 retained</span></div><p class="muted">Chronological simulation timestamps (UTC). Commands, rejections and safety transitions remain visible across resets; the latest 300 events are retained.</p><ol id="history" class="history-list"><li class="empty-state">No events recorded.</li></ol></section>
+      </div>
+    </main>
+    <footer>RoboSentinel / local simulation <span>Illustrative thresholds. No hardware validation or certified safety claim.</span></footer>
+  </div>
+  <dialog id="confirmation" aria-labelledby="confirmation-title" aria-describedby="confirmation-description"><form method="dialog"><p class="eyebrow">SIMULATION ACTION</p><h2 id="confirmation-title">Confirm action</h2><p id="confirmation-description"></p><p id="confirmation-policy" class="dialog-policy"></p><div class="dialog-buttons"><button id="cancel-confirmation" value="cancel" autofocus>Cancel</button><button id="confirm-action" value="confirm" class="primary">Confirm action</button></div></form></dialog>
+</body>
+</html>

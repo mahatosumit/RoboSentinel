@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Overheat, safe stop and confirmed recovery",
+    "steps": [
+      { "op": "command", "action": "start", "label": "Start healthy mission", "expect": { "mode": "navigating", "faults": [], "motionEnabled": true } },
+      { "op": "tick", "count": 3, "expect": { "faults": [] } },
+      { "op": "inject", "name": "overheating", "label": "Inject 95 C motor fault", "expect": { "mode": "faulted", "faults": ["motor-overheating"], "motionEnabled": false } },
+      { "op": "command", "action": "retry", "confirmed": true, "label": "Reject unsafe confirmed retry", "expect": { "ok": false, "motionEnabled": false } },
+      { "op": "clear", "name": "overheating", "expect": { "faults": [], "latched": true, "motionEnabled": false } },
+      { "op": "command", "action": "start", "label": "Ordinary start cannot bypass latch", "expect": { "ok": false } },
+      { "op": "command", "action": "retry", "expect": { "ok": false } },
+      { "op": "command", "action": "retry", "confirmed": true, "expect": { "mode": "recovering", "ok": true, "motionEnabled": false } },
+      { "op": "tick", "label": "Fresh recovery check enables motion", "expect": { "mode": "navigating", "latched": false, "motionEnabled": true } }
+    ]
+  },
+  {
+    "name": "Lost heartbeat and frozen telemetry",
+    "steps": [
+      { "op": "command", "action": "start", "expect": { "faults": [] } },
+      { "op": "inject", "name": "communication-loss", "expect": { "faults": [] } },
+      { "op": "tick", "count": 4, "expect": { "mode": "faulted", "motionEnabled": false, "faults": ["communication-loss", "sensor-stale", "telemetry-stale"] } },
+      { "op": "command", "action": "return-to-base", "confirmed": true, "expect": { "ok": false } },
+      { "op": "clear", "name": "communication-loss", "expect": { "faults": [], "motionEnabled": false } }
+    ]
+  },
+  {
+    "name": "Simultaneous faults and retained reset history",
+    "steps": [
+      { "op": "inject", "name": "low-battery", "expect": { "faults": ["low-battery"] } },
+      { "op": "inject", "name": "obstacle", "expect": { "motionEnabled": false } },
+      { "op": "inject", "name": "sensor-failure", "expect": { "faults": ["sensor-failure", "low-battery", "obstacle-blockage"] } },
+      { "op": "command", "action": "retry", "confirmed": true, "expect": { "ok": false } },
+      { "op": "command", "action": "reset", "expect": { "mode": "idle", "faults": [], "latched": false, "motionEnabled": false } }
+    ]
+  }
+]
