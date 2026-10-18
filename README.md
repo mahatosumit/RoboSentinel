@@ -35,7 +35,7 @@ requires explicitly confirmed, freshly checked recovery.
 | Clean local checkout | **VERIFIED** | Offline root install, checks and server/route smoke tests passed |
 | Docker image and hosted CI | **NOT TESTED** | Recipes exist; no successful Docker build or hosted run is claimed |
 | Hardware, Safari/Firefox and manual screen-reader use | **NOT TESTED** | Outside the current evidence |
-| Public repository and Buildathon entry | **BLOCKED** | Workspace CLI authentication/public URL and final submission still need verification |
+| Public source release and Buildathon entry | **BLOCKED** | Public repository exists but is empty; source push, workspace authentication and final submission remain pending |
 
 These are local verification results, not coverage percentages, deployment
 badges or certification. Details and limitations are in
@@ -360,10 +360,14 @@ are permitted with its notice retained; the software is provided without warrant
 - [Design system](DESIGN.md)
 - [Buildathon submission draft and verified event guidance](docs/submission.md)
 - [Official-criteria assessment and skeptical competition review](docs/competition-review.md)
+- [Current release audit and publication checklist](docs/release-audit.md)
+- [GitHub repository — source publication pending](https://github.com/mahatosumit/RoboSentinel)
 - [Official Frontier Buildathon 2026 guide](https://omnirush.ai/buildathon)
 
-**Publication status:** a public GitHub URL has not been verified from this
-workspace. The current workspace CLI reports no authenticated account and no
-remote is configured; a login completed elsewhere must be made available through
-an authorized CLI session here. No hosted demo, package-registry release or
-completed Buildathon submission is claimed. See the submission draft for blockers.
+**Publication status (19 October 2026):** the repository above is anonymously
+accessible and public, but currently has **no published commits or files**.
+`origin` points to that existing repository; do not try to recreate it. The Linux
+workspace CLI still reports no authenticated host despite a reported login
+elsewhere. No source push, rendered public README/images, hosted demo,
+package-registry release or completed Buildathon submission is claimed.
+See the current release audit and submission draft for verified facts and blockers.

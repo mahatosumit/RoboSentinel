@@ -13,6 +13,8 @@ refresh below was verified on 19 October 2026 (Asia/Calcutta / IST).
 **Latest replay release:** 60 tests, 18 syntax-checked files, three original
 scenarios plus the 12-step replay, and 19 automated Chromium journeys passed.
 See the final section for current evidence; earlier counts are historical.
+The subsequent [release audit](release-audit.md) records the now-verified public
+but empty repository, configured origin and remaining publication/account gates.
 
 ## Baseline before edits
 
@@ -136,7 +138,7 @@ See `docs/evidence/` and `docs/demo-walkthrough.md`. PNGs are unmodified actual
 test-browser screenshots with synthetic readings and controlled test clocks.
 No video or public demo link has been created.
 
-## External release status
+## External release status — before repository identification
 
 - **BLOCKED:** GitHub publication; local CLI reports not authenticated, no remote.
   The user reports having signed in, but the workspace Linux CLI cannot see a
@@ -284,3 +286,37 @@ title/description. These checks cover filesystem references, not anonymous
 GitHub rendering, remote image requests, Mermaid rendering or live form limits.
 The original safety core, live app/shared stylesheet, manifests/locks and five
 historical PNGs were also diff-checked unchanged against `514e552`.
+
+## Final release audit — 19 October 2026
+
+Starting state was independently confirmed as clean `main` at `c3a293b`, not the
+reported modified checkout. Both full working/staged diffs were empty. Existing
+public https://github.com/mahatosumit/RoboSentinel was confirmed anonymous/public
+but empty: no refs from `git ls-remote`, API size 0 and zero hosted workflow runs.
+Configured/fetched origin at that existing URL. No remote files/history were
+overwritten, no repo creation retried, and no push or submission performed.
+Workspace CLI authentication remains unavailable despite the reported external login.
+
+Fresh root checks again passed **60 tests, 18 syntax files, three scenarios,
+12 replay steps and 19 Chromium journeys**. A separate tracked-files-only clone
+of `c3a293b9311947a62ea5ceac64e4c4a670e3185a` passed offline install and `make test`,
+then a real tracked-server startup smoke checked **12 assets, four forbidden paths,
+HEAD and security headers**, and stopped its temporary loopback child process.
+The clone remained clean. This is not a public remote clone or Docker execution.
+
+Reviewed pinned CI commands match the local checks, but hosted execution remains
+unrun. The official Node release and Docker Hub base tag are available. No Docker,
+Podman or Buildah executable or usable Docker socket exists here; no container
+result is inferred. A second organizer-browser attempt timed out with no tab,
+so actual form limits/account selections/registration/receipt remain unverified.
+
+All-reachable-history credential-pattern scans, including binary content, found
+no matching tested secret formats. A separate path scan identified a historical
+generated font-cache object with a workspace-absolute path, already removed in
+`5db1998`. It is absent from current files but remains in history; no rewrite was
+performed. This bounded scan is not proof that every possible secret is absent.
+No tracked file matched current ignore rules. See [release-audit.md](release-audit.md)
+for the criterion-by-criterion decision, exact Docker/push commands and approval gate.
+Updated local presentation validation passed **54 relative links/anchors**, all
+seven PNG signatures/dimensions and the unchanged 46/473-character draft. The
+runtime, UI, tests, packaging, CI and screenshots remained unchanged from `c3a293b`.

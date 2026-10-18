@@ -216,16 +216,19 @@ never passed off as current execution.
 
 ## F. Repository release state
 
-**Public GitHub URL: BLOCKED, none verified.** Primary repository has no remote;
-workspace `gh auth status` reports no logged-in host. Extension discovery did
-not expose an alternative GitHub publication action. No credentials were copied
-from another environment. Public account age/identity must match the joined account.
+**Public repository URL: VERIFIED, source publication still BLOCKED:**
+https://github.com/mahatosumit/RoboSentinel. The later release audit confirmed
+public visibility but no published refs/files and configured `origin` to that
+existing repository. Workspace `gh auth status` still reports no logged-in host.
+No credentials were copied from another environment. The named public account
+is older than three days; its identity must still match the joined event account.
 
 README and seven genuine local PNGs exist and use repository-relative links.
 Local links can be checked without network, but anonymous GitHub accessibility,
 rendered README/Mermaid, public image responses and latest pushed commit cannot
 be verified until publication. Do not turn a proposed repository name into a URL.
-No hosted app, uploaded video, package release, container run or hosted CI result
+See [current release audit](release-audit.md) for the updated evidence and exact
+unblocking commands. No hosted app, uploaded video, package release, container run or hosted CI result
 is claimed. New code is committed; the evidence/documentation refresh follows as
 a separate reviewed working-step commit.
 

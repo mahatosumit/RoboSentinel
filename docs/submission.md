@@ -24,7 +24,7 @@ Checked on **19 October 2026 (Asia/Calcutta, IST / UTC+05:30)**:
 | Join/registration cutoff | **19 October 2026, 11:59 PM IST** (UTC **19 October, 18:29**) for prize eligibility | Individual registration/join state unverified |
 | Participation | Online, solo; OmniRush must be the only generative AI tool used for code/text/images | Work here used OmniRush; personal/overall eligibility requires user confirmation |
 | Fresh work | Start fresh during the event; judges compare code to genuine OmniRush sessions | Original empty workspace and project session are documented; organizer acceptance not claimed |
-| GitHub | GitHub account at least **3 days old**; public repository on the account connected to the event | Connected account, age, CLI login and public URL not verified |
+| GitHub | GitHub account at least **3 days old**; public repository on the account connected to the event | Named public account `mahatosumit` was created in 2021; public repo exists but is empty. Event-connected identity and workspace login remain unverified |
 | Required evidence | Repository with README and the OmniRush sessions used to build it | README and genuine app-local session pointer prepared; published repo/form selections pending |
 | Video | **Optional**, recommended **2–3 minutes** | Presenter script and screenshots exist; no video recorded/uploaded |
 | Live link | **Optional** | Local dashboard only; no public app hosting |
@@ -57,9 +57,11 @@ BLOCKED** until the actual title/description fields are inspected.
 
 ## Links and demonstration
 
-- **Public GitHub URL: BLOCKED.** No remote is configured. The workspace's local
-  `gh auth status` still reports no logged-in hosts despite the user reporting
-  completed authentication; a login in another environment is not assumed usable.
+- **Public repository URL: VERIFIED**, https://github.com/mahatosumit/RoboSentinel.
+  Anonymous page/API checks confirm public visibility; GitHub reports an empty
+  repository, and `git ls-remote` returns no refs. **Source publication is BLOCKED**:
+  `origin` is configured to the existing repo, but the workspace CLI still reports
+  no logged-in host. No published commit or rendered README/image is verified.
 - **Public demo/video URL: NOT AVAILABLE.** Neither is mandatory per the guide;
   do not add a placeholder URL to the final form.
 - Local dashboard: `npm start`, then `http://127.0.0.1:3000/`.
@@ -122,10 +124,12 @@ GitHub/publication action that resolves the CLI authentication blocker.
 - [ ] Verify event join/registration, solo eligibility and the connected GitHub
   account's age/identity in the user's dashboard.
 - [ ] Make CLI authentication available in this workspace without copying tokens
-  into project files/chat. Inspect intended existing repos before creating one.
+  into project files/chat, or use the already-authenticated terminal for a normal
+  push from this same checkout. Do not recreate the existing repository.
 - [ ] Publish verified `main` to public `robosentinel` on that connected account;
   verify public visibility, latest commit, README, screenshots and source.
-- [ ] Replace the GitHub blocker above with the real verified URL.
+- [ ] Verify a real published commit and anonymous source/README/image access;
+  the public URL exists but its empty state is not a source release.
 - [ ] Inspect title/description limits and required fields in the live form.
 - [ ] Select only genuine project sessions and Open Frontier if appropriate.
 - [ ] Add a real video/live link only if one is made and checked; they are optional.
