@@ -67,6 +67,8 @@ function fail(error) {
   byId('monitor-status').className = 'badge critical';
   setText('safety-title', 'State unavailable');
   setText('safety-detail', 'Do not interpret the last displayed readings as current.');
+  setText('commanded-mode', 'Unavailable');
+  setText('motion-state', 'Motion state unavailable · monitoring stopped; readings below are stale');
   byId('safety-panel').className = 'safety-panel critical';
   document.querySelectorAll('main button, main select').forEach((control) => { control.disabled = true; });
   pendingAction = null;
@@ -216,8 +218,12 @@ function render() {
   setText('commanded-mode', words(state.mode));
   setText('reported-mode', words(state.telemetry?.mode));
   setText('motion-state', state.shutdown ? 'Shutdown active · motion disabled' : `Motion ${state.motionEnabled ? 'enabled' : 'disabled'} · mission ${state.running ? 'running' : 'not running'}`);
-  setText('monitor-status', state.shutdown ? 'Monitoring / shutdown' : 'Monitoring active · 1 s');
-  byId('monitor-status').className = 'badge healthy';
+  const monitoringSeverity = state.faults.some(fault => fault.severity === 'critical') ? 'critical'
+    : state.faults.length || state.latched || state.shutdown ? 'warning' : 'healthy';
+  setText('monitor-status', state.shutdown ? 'Monitoring active · shutdown' : state.faults.length
+    ? `Monitoring active · ${state.faults.length} fault${state.faults.length === 1 ? '' : 's'}`
+    : state.latched ? 'Monitoring active · stop latched' : 'Monitoring active · no faults');
+  byId('monitor-status').className = `badge ${monitoringSeverity}`;
   setText('simulation-time', timestamp(state.now));
   setText('wall-time', timestamp(Date.now()));
   setText('elapsed-time', `${number(sessionElapsed / 1000)} s wall time accounted`);

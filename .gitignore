@@ -6,3 +6,7 @@ coverage/
 .lavish/
 test-results/
 .DS_Store
+.browsers/
+.tools/
+.verification/
+docs/evidence/qa-failure.png
