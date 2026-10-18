@@ -43,3 +43,20 @@ Chromium QA harness, not generated as mockups:
 They use controlled test time and synthetic data. No video, public demo link,
 hosted application or recording duration is claimed. A presenter can record the
 script above locally; review the actual recording before adding its link.
+
+## Optional Buildathon recording (2–3 minutes)
+
+The [official guide](https://omnirush.ai/buildathon) recommends, but does not
+require, a 2–3 minute video. The 60–90 second core demonstration above is a
+rehearsable segment, not a claim to meet a mandatory video duration. To expand it:
+
+1. **0:00–0:25:** State the operator problem, target user and simulation-only boundary.
+2. **0:25–1:50:** Perform the core sequence above, including the genuine CLI
+   unsafe-retry rejection and the lost-heartbeat state distinction.
+3. **1:50–2:25:** Show the actual test/demo output and explain the core modules.
+4. **2:25–2:45:** Show the real public repository only after publication is verified;
+   mention persistence/hardware limitations and where to find setup instructions.
+
+These are suggested presenter timings. No video file, upload, hosted demo or
+recording duration has been verified. A live demo link is also optional per the
+guide. The final submission still needs user review and explicit authorization.

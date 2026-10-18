@@ -1,288 +1,331 @@
 # RoboSentinel
 
-RoboSentinel is a **simulation-first robot monitoring and fault-response system**.
-It generates deterministic mobile-robot telemetry, identifies abnormal conditions
-with transparent rules, and applies a fail-safe simulated response policy.
+### Intelligent Robot Monitoring and Fault Response
 
-> **Simulation only. No hardware drivers, robot commands, cloud services or
-> certified safety claims are included.** Thresholds are illustrative demo
-> assumptions and must be calibrated and reviewed before any real deployment.
+A local robot-monitoring prototype for understanding **what failed, why motion
+stopped, and when recovery is permitted**. RoboSentinel combines a deterministic
+telemetry simulator, explainable fault rules, a simulated safety-response policy
+and a browser dashboard—without API keys or runtime dependencies.
 
-## Who it is for
+Robotics students, software engineers and operator-interface reviewers can use
+it to reproduce fault combinations, inspect evidence and test recovery
+restrictions before introducing hardware. The goal is observable, testable
+systems behaviour, not a chatbot or an unsupported claim of ML intelligence.
 
-Robotics students, simulator developers and operator-interface reviewers who
-want to exercise observable fault-handling behaviour without connecting motors
-or relying on paid/cloud services. The baseline is explainable deterministic
-rules, **not machine learning**.
+> **Simulation only.** This project does not control real robots, motors or
+> actuators. It is not a certified functional-safety system. Its thresholds and
+> recovery rules are illustrative software policies, not guarantees of physical safety.
 
-## Features
+[Quick start](#quick-start) · [Demonstration](#visual-demonstration) ·
+[Architecture](#architecture) · [Fault behaviour](#fault-behaviour) ·
+[Verification](#verification-and-reproducibility) · [Contributing](#contributing)
 
-- Seeded synthetic battery/voltage, motor, sensor, obstacle and heartbeat data
-- Seven stackable injected causes and simultaneous severity-prioritized faults
-- Independent freshness clock, critical/obstacle stop and latched recovery
-- Policy revalidation when a pending operator confirmation is submitted
-- Confirmed reset with explicit cleared-condition evidence and retained history
-- Responsive telemetry, evidence, recommendations, actions and event dashboard
-- Executable acceptance scenarios, offline core tests and optional browser QA
+## Project status
 
-## What a reviewer can demonstrate
+| Area | Status | Evidence / scope |
+| --- | --- | --- |
+| Core behaviour, HTTP surface and contrast tokens | **VERIFIED** | 51 tests passed; no failures or skips |
+| JavaScript syntax and deterministic demos | **VERIFIED** | 15 files; 3 scenario transcripts passed |
+| Rendered dashboard | **VERIFIED** | 15 automated Chromium journeys, including keyboard and narrow layouts |
+| Clean local checkout | **VERIFIED** | Offline root install, checks and server/route smoke tests passed |
+| Docker image and hosted CI | **NOT TESTED** | Recipes exist; no successful Docker build or hosted run is claimed |
+| Hardware, Safari/Firefox and manual screen-reader use | **NOT TESTED** | Outside the current evidence |
+| Public repository and Buildathon entry | **BLOCKED** | Workspace CLI authentication/public URL and final submission still need verification |
 
-1. Launch a local browser dashboard and see a healthy simulated robot.
-2. Start the simulated mission and observe live battery, voltage, motor,
-   sensors, obstacle, heartbeat and commanded/reported modes.
-3. Inject motor overheating and see rule evidence, a critical fault, and a
-   latched simulated stop.
-4. Attempt recovery and see the safety interlock reject it while the cause is
-   present. Clear the cause, then explicitly confirm a monitored retry.
-5. Inspect chronological fault, command, rejection, safety-stop and recovery
-   events in the dashboard.
-6. Run deterministic scenario assertions and the full automated test suite.
+These are local verification results, not coverage percentages, deployment
+badges or certification. Details and limitations are in
+[`docs/verification.md`](docs/verification.md).
 
-## Requirements
+## Visual demonstration
 
-- Node.js **22.23.3**, pinned in `.nvmrc` and the Dockerfile (package supports 22+)
-- A modern browser with ES module and native `<dialog>` support
-- No runtime dependencies, build step, external fonts, API keys or secrets
-- `npm ci` below uses the checked-in empty dependency lockfile and works offline.
+### Overheating: evidence, stop and rejected restart
 
-## Run locally
+![RoboSentinel showing a 95-degree motor fault, disabled simulated motion, critical evidence and a rejected start command](docs/evidence/overheat-stop.png)
 
-```bash
+The injected motor temperature is 95 °C. The dashboard shows the critical rule,
+supporting evidence and recommended inspection. Commanded state is **Faulted**,
+motion is disabled, and the rejected Start request is retained in event history.
+
+<details>
+<summary><strong>Communication loss: stale reported state is not commanded state</strong></summary>
+
+![RoboSentinel showing lost heartbeat and stale packets, with reported mode navigating but commanded mode faulted](docs/evidence/communication-loss.png)
+
+After the frozen packet becomes more than three seconds old, the monitor raises
+heartbeat, sensor-stale and packet-stale faults. The last packet still reports
+**navigating**, but the independent commanded state is **faulted** with motion
+disabled. Old telemetry is never used as proof of current motion authorization.
+
+</details>
+
+These are genuine, unmodified captures from the local Chromium QA harness with
+synthetic telemetry and controlled test clocks. Other captures show the
+[healthy/paused scene](docs/evidence/healthy-desktop.png),
+[390px layout](docs/evidence/narrow-screen.png) and an
+[intentional module-loading error](docs/evidence/module-error.png).
+There is no hosted application or recorded-video link to claim.
+
+## Key capabilities
+
+- **Deterministic telemetry:** seeded battery/voltage, motor temperature/state,
+  sensor health/link, obstacle distance, heartbeat, packet time and robot mode.
+  Equal seeds and time-step sequences produce equal samples.
+- **Fault injection:** seven persistent, individually clearable causes that can
+  be stacked to exercise simultaneous faults.
+- **Explainable detection:** deterministic rules report severity, triggering
+  evidence, first-detected timestamp, explanation and recommended response.
+- **Stop latch:** critical faults and close detected obstacles stop simulated
+  motion. Clearing the cause alone never resumes it.
+- **Confirmed recovery:** retry, return-to-base, shutdown and reset require
+  explicit confirmation; eligibility is checked again when a command arrives.
+- **Freshness monitoring:** independent packet/heartbeat/sensor ages and a
+  delayed-monitoring-callback interlock, including while a mission is paused.
+- **Operator dashboard:** periodically updated telemetry, prioritized faults,
+  visible policy reasons, keyboard-accessible dialogs and responsive layouts.
+- **Audit and repeatable demos:** latest-300-event action/fault history and three
+  executable acceptance scenarios that fail if a safety expectation is unmet.
+
+## Quick start
+
+### Requirements
+
+- **Node.js 22.23.3** with npm. This is the verified runtime, pinned in
+  [`.nvmrc`](.nvmrc) and the Dockerfile; `package.json` permits Node 22 or newer.
+- A modern browser supporting ES modules and native `<dialog>`.
+- A downloaded checkout of this project; open a terminal in its root directory.
+
+There is no compilation step, database, cloud account, external font or API key.
+The root package has zero dependencies. Acquiring Node itself needs a normal
+installation/download; the following application install and checks work offline.
+
+### Install and start
+
+These commands are the same in Windows Command Prompt, PowerShell and Bash:
+
+```text
+node --version
 npm ci --ignore-scripts --offline --no-audit --no-fund
-npm test
-npm run check
-npm run demo
 npm start
 ```
 
-Open <http://127.0.0.1:3000/>. The server binds to loopback by default. To use
-another local port:
+Open **http://127.0.0.1:3000/**. Start the mission, then use Fault injection.
+Stop the server with **Ctrl+C**. Each browser tab owns a separate in-memory scene.
 
-```bash
-PORT=3100 npm start
-```
+### Test and demonstrate
 
-The server is an explicit allowlist of dashboard and core-module assets. It does
-not expose `package.json`, hidden files, repository metadata or arbitrary paths.
-
-With an existing nvm installation, `nvm install && nvm use` selects `.nvmrc`.
-Obtaining Node itself requires network; running the app/core checks after that
-does not. Windows PowerShell users can set `$env:PORT = '3100'` before `npm start`.
-
-### Container build and local deployment
-
-```bash
-docker build -t robosentinel:local .
-docker run --rm --name robosentinel -p 127.0.0.1:3000:3000 robosentinel:local
-```
-
-Open the same loopback URL. The container binds internally to `0.0.0.0` for port
-mapping, runs as the nonroot `node` user, checks health with Node fetch and runs
-test/check/demo while building. No extra system packages are needed by the app.
-Docker was unavailable in the QA environment: **image build/run NOT TESTED**.
-The recipe is supplied, not a claim of a successful container deployment.
-Pulling the base image requires network; zero-dependency `npm ci` is offline.
-Do not expose this prototype as an authenticated robot service; it has no such API.
-
-### Optional browser checks
-
-`make test` runs the core test, syntax and demo commands. A separate developer
-harness in [`qa/`](qa/README.md) exercises the rendered UI with Playwright and
-has its own pinned lockfile. It does not add dependencies to the application.
-
-## Fault-injection procedure
-
-The dashboard's **Fault injection** control supports stacked synthetic causes:
-
-| Cause | Expected detection | Default response |
-| --- | --- | --- |
-| Low battery | Warning at <=20% | Inspect; eligible return-to-base requires confirmation |
-| Critical battery | Critical at <=10% or <=21 V | Stop; inspect power; no blind recovery |
-| Motor overheating | Warning >=70 °C, critical >=85 °C | Stop when critical; inspect and cool |
-| Sensor failure | Critical failed/offline navigation sensor | Stop; inspect and require fresh readings |
-| Stale sensor readings | Critical after >3 s | Stop; require fresh readings |
-| Communication loss | Critical heartbeat after >3 s | Stop; reject blind motion |
-| Obstacle blockage | Warning when detected at <=0.5 m | Stop/pause navigation; inspect route |
-
-Injections persist until individually cleared or reset. Fault detection is
-deterministic and sorted by critical, warning, then stable fault id. Every fault
-contains its severity, evidence, explanation, detection timestamp and
-recommended response.
-
-## Safety model
-
-The response engine is intentionally conservative:
-
-- Critical faults and close detected obstacles require a simulated stop.
-- A safety stop is latched. Clearing a cause never restarts motion.
-- `start` cannot bypass an active fault or latch.
-- `retry`, `return-to-base`, `shutdown` and `reset` require explicit confirmation
-  in the core API as well as the UI. An unconfirmed reset is rejected and logged.
-- Retry has a fresh one-second monitored recovery check before motion starts.
-- If any interlock changes during that check, recovery is cancelled.
-- Return-to-base is eligible with no faults or warning-level low battery only,
-  >10% battery and >21 V; its five-second transit is synthetic, not a route planner.
-- Shutdown disables motion while monitoring continues; reset is required.
-- A delayed monitoring callback (>3 s) creates a monitoring-gap critical fault
-  before the simulator advances through the unobserved interval.
-- The dashboard distinguishes the commanded safety/motion state from the last
-  reported telemetry mode. Stale reported data is not authoritative.
-- Reset restores the configured plant, logs the cleared conditions and leaves
-  motion stopped. Unsafe configured initial conditions are detected again.
-- Audit history is the latest 300 events in the current browser tab. It is
-  preserved across confirmed resets, **not** durable across reload/tab closure.
-
-No browser action is a real hardware control. `server.js` serves static files;
-there is no network endpoint for commanding a robot.
-
-## Architecture
+In another terminal at the project root:
 
 ```text
-                         browser (public/)
-                               |
-                        createMonitor()
-                               |
-       +-----------------------+------------------------+
-       |                        |                        |
-  simulator.js             detector.js               policy.js
-  synthetic plant          pure rules                pure interlocks
-       |                        |                        |
-       +------------------------+------------------------+
-                                |
-                         monitor.js
-             clock, lifecycle, latch, events, commands
-                                |
-                         snapshot for UI
-```
-
-### Modules
-
-- `src/simulator.js` — seeded synthetic plant, bounded variation, physical
-  ranges, modes, timestamps and independent fault injection.
-- `src/detector.js` — pure validation and rule-based classification. Malformed,
-  future-dated or stale data fails closed.
-- `src/policy.js` — pure action eligibility and stop policy. It does not mutate
-  state and does not trust UI decisions.
-- `src/monitor.js` — authoritative state machine for the local scene, clock,
-  fault lifecycle timestamps, safety latch, commands and bounded event history.
-- `public/` — accessible responsive dashboard. It renders monitor snapshots and
-  never implements its own safety rules.
-- `server.js` — local static allowlist with security headers; not a robot API.
-- `scenarios/demo.json` and `src/scenarios.js` — checked-in executable scenarios.
-- `test/` — simulator, detector, policy, monitor, HTTP surface and scenario tests.
-
-## Telemetry schema
-
-```js
-{
-  timestamp: 1767268800000,
-  heartbeat: 1767268800000,
-  battery: { percent: 82, voltage: 25.1 },
-  motor: { temperatureC: 39, state: 'stopped' },
-  sensor: { health: 'healthy', communication: 'online', timestamp: 1767268800000 },
-  obstacle: { detected: false, distanceM: 3.5 },
-  mode: 'idle'
-}
-```
-
-`mode` can be `idle`, `navigating`, `paused`, `faulted` or `recovering`.
-Telemetry timestamps are epoch milliseconds. The monitor owns the simulation
-clock so tests and demo scenarios do not depend on wall-clock timing.
-
-## Verification and known limitations
-
-The current dependency-free checks are:
-
-```text
-npm test      51 passed, 0 failed
-npm run check 15 application/core-test JavaScript files syntax-checked
-npm run demo 3 deterministic scenarios with assertions passed
-bash qa/test-debian.sh 15 automated Chromium browser journeys passed
-```
-
-The HTTP test also verifies that the dashboard and core modules are served,
-unknown paths are rejected, unsafe repository files are not served, methods are
-restricted, and baseline security headers are present.
-
-Known limitations:
-
-- Each browser tab owns an independent in-memory simulation; state is not persisted.
-- Browser verification used an isolated headless Chromium 156.0.8078.4 through
-  Playwright 1.64.1. Desktop, tablet and 390px/320px controls, confirmation,
-  timeouts and failure UI were exercised. The built-in browser timed out; it
-  was not used as evidence. Safari, Firefox, human screen-reader QA and
-  hardware validation are **NOT TESTED**.
-- There is no real kinematics, map, localization, charging model, sensor noise
-  calibration, hardware I/O, authentication, multi-robot fleet or durable log.
-- A browser tab can be suspended by the OS. The monitor records a monitoring-gap
-  fault when it resumes, but no software can guarantee a real hardware stop from
-  a suspended browser; this project has no hardware path by design.
-- Thresholds are not a safety case. Real deployment needs hazard analysis,
-  independent safety controls, calibrated sensor specifications, fault-injection
-  evidence and hardware-in-the-loop validation.
-- The detector validates each packet, not an external network stream; there is
-  no out-of-order-packet ingestion adapter. The monitor's own clock advances
-  monotonically and rejects negative/invalid time steps. A future hardware
-  adapter would need sequence/replay checks and independent safety controls.
-- Docker build/run and hosted GitHub Actions execution are **NOT TESTED** locally.
-
-See [`docs/verification.md`](docs/verification.md) for the baseline, fixes, exact
-verification scope, security findings and untested areas. Counts above describe
-this release verification, not hardware performance or a coverage percentage.
-A separate clean Git checkout also passed offline `npm ci`, all core commands
-and CLI server/asset checks at the documented alternate port 3100. Optional QA
-dependencies and local tool directories were not needed for that reproduction.
-
-## Reproducible demo from the command line
-
-```bash
+npm test
+npm run check
 npm run demo
 ```
 
-The scenario transcript is intentionally readable. The first scenario starts a
-mission, injects overheating, rejects unsafe retry, clears the cause, and only
-then enables motion after confirmed recovery. The second freezes a packet and
-shows the independent stale-data response. The third stacks faults and verifies
-reset plus retained history. Any expectation mismatch exits non-zero.
+`npm run check` is a syntax check, not a linter or typechecker. On systems with
+GNU Make, `make test` runs all three commands. Browser QA is a separate optional
+developer installation; see [`qa/README.md`](qa/README.md).
 
-For a repeatable 60–90 second walkthrough, follow
-[`docs/demo-walkthrough.md`](docs/demo-walkthrough.md). The UI blocks unsafe
-recovery controls and displays the reason; the CLI scenario additionally shows
-an actual confirmed unsafe retry rejected by the core.
+### Use another port
 
-### Genuine browser captures
+| Shell | Command |
+| --- | --- |
+| Windows Command Prompt | `set "PORT=3100" && npm start` |
+| PowerShell | `$env:PORT = '3100'; npm start` |
+| Bash / Linux / macOS | `PORT=3100 npm start` |
 
-![Overheating fault and latched simulated stop](docs/evidence/overheat-stop.png)
+Then open `http://127.0.0.1:3100/`. The server defaults to loopback. The supplied
+[`.env.example`](.env.example) documents optional `HOST` and `PORT`; the app does
+**not** automatically load `.env` files. Native Windows execution has not been
+tested here; the verified environment is Debian Linux with Node 22.23.3.
 
-Additional captures: [healthy/paused desktop](docs/evidence/healthy-desktop.png),
-[communication loss](docs/evidence/communication-loss.png),
-[390px narrow screen](docs/evidence/narrow-screen.png),
-[intentional module-load error](docs/evidence/module-error.png).
-These are unmodified screenshots from the automated local test browser with
-controlled test time and synthetic telemetry, not photographs or hardware logs.
+### Container recipe
 
-## Project documents
+```text
+docker build -t robosentinel:local .
+docker run --rm -p 127.0.0.1:3000:3000 robosentinel:local
+```
 
-- [`docs/implementation-plan.md`](docs/implementation-plan.md) — contract,
-  boundaries, assumptions and staged verification plan.
-- [`DESIGN.md`](DESIGN.md) — visual language, responsive rules and accessibility
-  direction for the monitoring cockpit.
-- [`scenarios/demo.json`](scenarios/demo.json) — executable acceptance scenarios.
-- [`docs/demo-walkthrough.md`](docs/demo-walkthrough.md) — 60–90 second demo script.
-- [`docs/verification.md`](docs/verification.md) — bounded QA/security evidence.
-- [`docs/submission.md`](docs/submission.md) — submission draft and real blockers.
+The recipe uses a pinned Node image, offline `npm ci`, build-time core checks,
+the nonroot `node` user and a Node-based health check. It binds internally to
+`0.0.0.0` for port mapping; the command above exposes only host loopback.
+After building, judges can run `docker run --rm --network none robosentinel:local npm test`.
+**Docker build/run is NOT TESTED in this environment.** No successful container
+deployment is implied, and the base-image pull requires network access.
 
-## GitHub publication
+## Architecture
 
-**BLOCKED: no authenticated GitHub account and no configured remote.** No public
-repository URL, demo-hosting link or completed Buildathon submission is claimed.
-The release work installed a GitHub CLI binary only inside ignored `.tools/`;
-`.tools/github/usr/bin/gh auth status` reported no logged-in hosts. Sign in
-directly using `.tools/github/usr/bin/gh auth login` (or a trusted system `gh`)
-in the same environment; never put tokens in project files or chat.
+The browser runs the entire simulation and monitoring loop. Node serves an
+explicit allowlist of static assets; it is **not** a robot command or telemetry
+API. The same core modules run in the dashboard and in the Node tests.
 
-After login, inspect the authenticated account's repositories before creating
-public `robosentinel`; reuse a clearly intended existing repository. Verify the
-public URL, README and source after push before adding links to the submission.
-The MIT licence is in [`LICENSE`](LICENSE). The configured CI has read-only
-permissions, commit-pinned standard actions and no AI/service integrations.
+```mermaid
+flowchart LR
+    Server["server.js: static assets"] --> UI["Browser dashboard"]
+    Operator["Operator"] -->|commands and fault injection| UI
+    UI -->|commands and elapsed-time ticks| Monitor["monitor.js"]
+    Monitor -->|advance and sample| Simulator["simulator.js"]
+    Simulator -->|telemetry| Monitor
+    Monitor -->|packet and monitor clock| Detector["detector.js"]
+    Detector -->|prioritized faults| Monitor
+    Monitor -->|faults and current state| Policy["policy.js"]
+    Policy -->|stop policy and eligibility| Monitor
+    Monitor -->|snapshot and events| UI
+```
+
+| File | Responsibility |
+| --- | --- |
+| [`src/simulator.js`](src/simulator.js) | Seeded synthetic plant, simple drain/thermal dynamics, mode and stackable fault overlays |
+| [`src/detector.js`](src/detector.js) | Packet validation, thresholds, evidence, severity and deterministic fault ordering |
+| [`src/policy.js`](src/policy.js) | Pure stop policy and action eligibility; no mutation or trust in UI decisions |
+| [`src/monitor.js`](src/monitor.js) | Authoritative simulation clock, command checks, stop latch, recovery timing and event lifecycle |
+| [`server.js`](server.js) | Loopback static HTTP server, exact asset allowlist and security headers |
+| [`public/app.js`](public/app.js) | Periodic updates, safe DOM rendering, controls, confirmations and error presentation |
+| [`public/index.html`](public/index.html) | Semantic dashboard structure, labels, live-status regions and native dialog |
+| [`public/styles.css`](public/styles.css) | Visual tokens, severity states, focus treatment and responsive layout |
+
+The [implementation contract](docs/implementation-plan.md) defines telemetry,
+configuration and module APIs. Modes are `idle`, `navigating`, `paused`, `faulted`
+and `recovering`. The GUI accounts for elapsed wall time; CLI scenarios use
+deterministic ticks, independent of real-time scheduling.
+
+## Fault behaviour
+
+All limits below come from [`THRESHOLDS`](src/detector.js). They are demo
+assumptions, not calibrated limits for a physical robot. Faults sort critical
+before warning, then by fault ID; simultaneous conditions remain individually visible.
+
+| Fault / injected cause | Trigger | Severity | Simulated response | Recovery conditions |
+| --- | --- | --- | --- | --- |
+| Low battery | Battery ≤20%; critical rules take precedence. Injection caps charge at 15%. | Warning when charge >10% and voltage >21 V | Existing motion is not automatically stopped by this warning alone; new Start/retry is blocked. Recommend inspection/return-to-base. | Confirm return-to-base only with >10%, >21 V and no other faults; normal retry requires all faults clear. |
+| Critical battery | Battery ≤10% **or** voltage ≤21 V. Injection caps charge at 5%, voltage at 20.5 V. | Critical | Stop and latch; inspect power. Return-to-base is blocked. | Restore noncritical, healthy readings and satisfy current action policy; shutdown is available with confirmation. |
+| Motor overheating | ≥70 °C warning; ≥85 °C critical. Injection forces ≥95 °C. | Warning / critical | Critical level stops and latches. Warning alone does not stop existing motion, but blocks a new Start/retry. | Clear the cause and cool below 70 °C; all other faults must clear before confirmed retry. |
+| Sensor failure | Health `failed` **or** sensor communication `offline` | Critical | Stop and latch; recommend inspecting the sensor/link. | Healthy, online, fresh readings and all faults clear; confirmed retry. |
+| Sensor stale | Sensor age **>3000 ms**; injection freezes only sensor time | Critical | Stop and latch while packet/heartbeat may remain fresh. | Fresh sensor data plus all faults clear; confirmed retry. |
+| Communication loss | Heartbeat age **>3000 ms**; injection freezes the entire last packet | Critical | Stop and latch; normally also raises sensor-stale and packet-stale faults. | Restore fresh packet/heartbeat/sensor data; confirmed retry after all faults clear. |
+| Obstacle blockage | `detected` is true **and** distance ≤0.5 m; injection sets 0.3 m | Warning, with stop interlock | Stop and latch despite warning severity; inspect the route. | Remove the cause, clear every fault and confirm retry. |
+| Telemetry packet stale | Packet age **>3000 ms** | Critical | Stop and latch; do not trust the reported mode. | Fresh valid packet and all faults clear; confirmed retry. |
+| Invalid telemetry | Missing, nonfinite, out-of-range, unknown-state or future-dated values | Critical | Fail closed with an invalid-packet fault and stop interlock. | Correct the source; valid data and all faults clear before retry. No dedicated UI injection for malformed packets. |
+| Monitoring gap | A monitor `tick` accounts for **>3000 ms** without an update | Critical | Latch a simulated stop before advancing the unobserved interval. | A fresh normal update clears the gap fault; the latch still requires confirmation. |
+
+Injected causes persist until individually cleared or a confirmed reset.
+At exactly 3000 ms, the stale/gap rules have not crossed their strict timeout.
+Inspection is non-motion; no action is a hardware command.
+
+## Safety model and limitations
+
+The key invariant is **clear cause ≠ authorize motion**.
+
+1. Critical faults and close detected obstacles force a latched simulated stop.
+2. Start cannot bypass a latch, shutdown or any active fault.
+3. Retry requires no active faults and explicit confirmation. It enters
+   `recovering` with motion disabled, then performs a fresh one-second monitored
+   check; a changed interlock cancels recovery.
+4. Confirmed return-to-base permits only a healthy scene or warning-level low
+   battery, with charge >10% and voltage >21 V. After the recovery check, its
+   five-second transit ends at idle. There is no route planning or charging model.
+5. Shutdown needs confirmation and prevents motion until confirmed reset.
+6. Reset restores the configured synthetic plant, records the cleared faults,
+   injections, latch and shutdown state, and leaves motion stopped. Unsafe initial
+   configuration is immediately detected again; unconfirmed reset is rejected.
+
+**Boundaries to keep in mind:**
+
+- No physical sensors, motors, actuators, ROS integration or hardware safety path.
+- No certified functional-safety claim. A suspended browser cannot guarantee a
+  stop on real hardware; this app records a monitoring gap when it resumes.
+- Reported telemetry mode can be stale; commanded mode and motion authorization
+  are displayed separately. Display failure marks current motion state unavailable.
+- Latest **300 events**, in memory per tab; resets retain bounded history,
+  but reload/tab closure discards it. It is not a durable or tamper-proof audit log.
+- No external-stream ingestion, sequence/replay rejection, authentication,
+  multi-robot fleet, realistic kinematics, localization or calibrated sensor model.
+- The detector validates one packet at a time. A future external telemetry adapter
+  would need sequencing and replay checks; the current monitor owns its clock.
+- The static server is local-only by default, not a hardened public robot service.
+
+## Verification and reproducibility
+
+Fresh Linux verification of the current implementation:
+
+| Evidence | Outcome | What it does not prove |
+| --- | --- | --- |
+| `npm test` | **51 passed, 0 failed, 0 skipped** | No hardware or coverage-percentage claim |
+| `npm run check` | **15 JavaScript files passed** | Syntax only, not a linter/typechecker |
+| `npm run demo` | **3 asserted deterministic scenarios passed** | Synthetic cases, not field trials |
+| `bash qa/test-debian.sh` | **15 automated Chromium journeys passed** | Not Safari/Firefox, native Windows or manual screen-reader certification |
+| Separate clean Git checkout | Offline install, core checks and 11 HTTP route assertions passed | Not a Docker build or all-Linux-distribution test |
+
+Browser checks exercise normal/stacked faults, stale timeouts, commanded versus
+reported state, confirmation revalidation, keyboard controls, reset evidence,
+320px/390px/tablet/desktop layouts and a deliberate module-load error. Normal
+journeys had no captured page/console errors or failed asset requests. Screenshot
+review is distinct from automated checks; no comprehensive manual accessibility
+review has been performed.
+
+HTTP tests check exact routing, raw traversal variants, hidden-file rejection,
+GET/HEAD-only serving, CSP, no-store, nosniff and no-referrer. UI text is inserted
+through DOM/textContent, not dynamic HTML. Root dependencies are empty; optional
+browser tooling has a separate lockfile. This is a bounded review, not proof that
+every security risk has been eliminated.
+
+[`docs/verification.md`](docs/verification.md) records baseline commits, actual
+commands, previous fixes, clean-checkout evidence and untested areas. Runtime,
+dependencies and CI actions are pinned; CI is configured but no hosted passing
+run is claimed. Docker build/run, physical devices, hardware and performance/load
+metrics remain **NOT TESTED**.
+
+## Demo walkthrough
+
+Run `npm run demo` for three deterministic cases: overheating with rejected
+unsafe retry and confirmed recovery; frozen communication with stale-data stop;
+and stacked faults followed by an audited confirmed reset.
+
+For a live presentation, follow [`docs/demo-walkthrough.md`](docs/demo-walkthrough.md):
+healthy navigation → inject overheating → inspect evidence/stop → show rejected
+restart and unsafe-retry restriction → clear without restart → confirm recovery
+→ inject communication loss. The core segment takes a suggested 60–90 seconds;
+an optional 2–3 minute recording can add the problem, architecture and test evidence.
+No recording has been created or published.
+
+## Roadmap
+
+**Planned, not implemented; no delivery dates promised:**
+
+- Persist/export event history so review evidence survives a tab closing.
+- Expand browser and assistive-technology checks, and execute the Docker recipe
+  in a clean container before making stronger portability claims.
+- Define and test an external telemetry adapter with sequence/replay validation
+  and a separate hazard analysis before considering hardware integration.
+
+## Contributing
+
+Keep contributions small, reproducible and consistent with the simulation-only
+boundary. Report the expected/observed behaviour, Node/browser versions, fault
+injections and a minimal reproduction. Never include secrets or private robot data.
+
+Before proposing a change, run `npm test`, `npm run check` and `npm run demo`.
+Add a regression test for changed behaviour; for UI changes, run the optional
+[browser harness](qa/README.md) and identify any untested browsers. Do not weaken
+an interlock or replace deterministic rules without explaining the behaviour change.
+
+Once the public repository is verified, use its Issues and pull requests.
+Until then, share a patch/reproduction with the project maintainer; no issue-tracker
+URL is invented here. No hardware operation is requested to reproduce a defect.
+
+## Licence and project links
+
+Released under the [MIT Licence](LICENSE): reuse, modification and redistribution
+are permitted with its notice retained; the software is provided without warranty.
+
+- [Architecture and telemetry contract](docs/implementation-plan.md)
+- [Verification evidence and security boundaries](docs/verification.md)
+- [Demo presenter script](docs/demo-walkthrough.md)
+- [Design system](DESIGN.md)
+- [Buildathon submission draft and verified event guidance](docs/submission.md)
+- [Official Frontier Buildathon 2026 guide](https://omnirush.ai/buildathon)
+
+**Publication status:** a public GitHub URL has not been verified from this
+workspace. The current workspace CLI reports no authenticated account and no
+remote is configured; a login completed elsewhere must be made available through
+an authorized CLI session here. No hosted demo, package-registry release or
+completed Buildathon submission is claimed. See the submission draft for blockers.

@@ -7,7 +7,8 @@ OmniRush.ai workspace. No external generative AI service or pentesting service
 was used. Core source, UI, HTTP server, tests, scenario fixtures and packaging
 were read directly; graph MCP/index coverage was unavailable, so no knowledge-
 graph completeness is claimed. This is not a security certification or a
-hardware test. Date: 18 October 2026 (Asia/Calcutta).
+hardware test. Initial review began 18 October 2026; the presentation/rules
+refresh below was verified on 19 October 2026 (Asia/Calcutta / IST).
 
 ## Baseline before edits
 
@@ -134,9 +135,67 @@ No video or public demo link has been created.
 ## External release status
 
 - **BLOCKED:** GitHub publication; local CLI reports not authenticated, no remote.
+  The user reports having signed in, but the workspace Linux CLI cannot see a
+  logged-in host. No credentials were read/copied to bridge environments.
 - **NOT TESTED:** Docker image build/run; Docker engine unavailable.
 - **NOT TESTED:** Hosted CI; workflow added but no remote run exists.
-- **BLOCKED:** Buildathon submission; no official form, character limit, verified
-  track/eligibility guidance or submission receipt has been supplied.
+- **BLOCKED:** Buildathon submission; the official guide and dashboard URL are
+  now verified, but authenticated form limits, individual eligibility, public repo,
+  selected sessions and a real submission receipt are still unverified.
 - One genuine RoboSentinel session is confirmed by OmniRush session search;
   this does not by itself prove event eligibility or create a public session link.
+
+## Presentation and official-rules refresh — 19 October 2026
+
+Baseline before edits was clean `main` at
+`f230795ed2ad0c5e1c42b4e6eb623f74ffd9623e`. `git cat-file -t` confirmed that
+reported release object is a commit in this repository; no history discrepancy
+or user changes were found. Ignored tools, browser binaries, dependencies,
+diagnostic images and the previous clean checkout remain outside the release tree.
+
+Fresh commands before presentation edits:
+
+- `npm test` — **51 passed, 0 failed, 0 skipped**.
+- `npm run check` — **15 JavaScript files passed**.
+- `npm run demo` — **3 scenarios passed**.
+- `bash qa/test-debian.sh` — **15 automated Chromium journeys passed**.
+- `.tools/github/usr/bin/gh auth status` — **not logged into any GitHub hosts**.
+- `git remote -v` — **no configured remote**.
+
+The README was rewritten with the actual module graph, source-derived fault and
+recovery table, shell-specific port instructions, genuine screenshot captions,
+contributing guidance, MIT terms and a clearly planned roadmap. Existing PNGs,
+runtime code, application configuration values, tests and scenarios were preserved.
+A nonsecret `.env.example` documents existing HOST/PORT process settings only;
+the server still does not automatically read dotenv files. The implementation
+contract now precisely states return-to-base eligibility (only no faults or
+warning-level low battery), rather than the broader phrase “no blocking faults.”
+
+Official guidance was reached from the organizer homepage and read at
+**https://omnirush.ai/buildathon**. Verified facts:
+
+- Submission closes **20 October 2026, 23:59 IST (18:29 UTC)** by server clock.
+- Joining for prize eligibility closes **19 October 2026, 23:59 IST**.
+- Online/solo, fresh event work and OmniRush-only generative AI are required.
+- The public repo must belong to the connected GitHub account (at least 3 days old).
+- README and genuine build sessions are required; video and live URL are optional.
+- A **2–3 minute** video is recommended; the local 60–90 second walkthrough is
+  the core segment, with an optional longer recording outline now documented.
+- Open Frontier is track 06, defined as “Anything else. Surprise us.” It is a
+  reasonable proposal for this robotics simulator, not verified account eligibility.
+- The dashboard submission produces a Submission ID to copy into Unstop.
+
+The official dashboard at **https://omnirush.ai/console/buildathon** exposed only
+a loading shell to the read-only fetch, and the organizer-linked Unstop page did
+not expose event details. No authenticated form, character limit, selected account,
+successful submission, public GitHub rendering or screenshot HTTP response has
+been verified. `docs/submission.md` separates these blockers from known rules.
+
+After the presentation edits, the same core commands again passed with **51
+tests, 15 syntax-checked files and 3 deterministic scenarios**, and the browser
+harness again passed **15 journeys**. A local documentation check validated
+**38 relative Markdown links/anchors**, the signatures/dimensions of all **5
+tracked PNGs**, and the **62/464-character** title/description. It did not render
+GitHub's Mermaid/Markdown or inspect a public repo. A diff against `f230795`
+confirmed the runtime, UI, tests, scenarios, scripts and tracked screenshots
+were unchanged by this documentation-only refresh.

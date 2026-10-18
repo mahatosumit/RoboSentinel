@@ -11,7 +11,9 @@ inspect timestamped transitions and rejected commands.
 ## Stack and boundaries
 
 Node 22+ built-in HTTP server and test runner; standard browser HTML/CSS/ES modules.
-No runtime or build dependencies. Core modules are shared by Node tests and UI.
+The verified runtime is pinned to 22.23.3. No runtime or build dependencies.
+Core modules are shared by Node tests and UI; optional browser QA is separately
+locked in `qa/` and is not part of the application runtime.
 
 - `src/simulator.js`: synthetic plant and fault injection only.
 - `src/detector.js`: pure telemetry validation and deterministic fault rules.
@@ -60,9 +62,12 @@ Malformed or future-dated data is critical, never silently healthy.
 
 `policyFor(faults)` returns `{stopRequired, reason}`. Critical faults and obstacle
 blockage require immediate simulated stop. A latched stop requires confirmed
-retry even after the cause clears. Return-to-base requires no blocking faults
-and battery >10%, voltage >21V. Shutdown, retry and return-to-base require
-explicit confirmation; inspect is non-motion. No automatic restart.
+retry even after the cause clears. Return-to-base requires no faults except
+optional warning-level low battery, plus battery >10% and voltage >21V. Warning
+motor temperature is therefore not eligible for return-to-base. Shutdown, retry,
+return-to-base and reset require explicit confirmation; inspect is non-motion.
+No automatic restart. A return-to-base command uses a fresh recovery check then
+a five-second synthetic transit, not real navigation or charging.
 
 `createMonitor(config = {})` exposes `tick(dtMs=1000)`, `command(action,
 {confirmed=false}={})`, `inject(name)`, `clear(name)`, `snapshot()`.
@@ -102,3 +107,14 @@ Browser-first is an implementation choice based on the empty workspace and Node
 availability. Synthetic values are plausible illustrations, not calibrated robot
 models. Thresholds are demo assumptions, not certified safety limits. Hardware
 validation is deliberately excluded and must never be implied by passing tests.
+
+## Release packaging and presentation
+
+Root `npm ci` is offline/zero-dependency; `.nvmrc`, root lockfile, Dockerfile and
+Makefile describe reproducible application setup. `.env.example` lists nonsecret
+HOST/PORT settings only; no automatic dotenv loading is implemented. The README
+contains source-linked behaviour tables and a Mermaid view of the existing
+architecture, not a new backend or network robot API. Browser captures are genuine
+and tracked; generated diagnostic captures and tool/cache directories are ignored.
+Docker execution, hosted CI and public GitHub rendering remain unverified until
+their corresponding tools/authentication are available.

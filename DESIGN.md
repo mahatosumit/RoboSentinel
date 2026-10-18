@@ -29,7 +29,8 @@ recovery controls have visible reasons. Consequential actions use a labelled
 confirmation dialog naming the simulation action; cancel has initial focus.
 
 ## Responsive and accessibility rules
-Max width 1440px; single column below 768px; no horizontal page overflow.
+Max width 1440px; major dashboard panels become a single column below 768px;
+the compact telemetry grid retains two reading columns. No horizontal page overflow.
 Grid children min-width 0; wrap long evidence. At least 44px interactive targets,
 visible focus, semantic headings, labelled values and no colour-only meaning.
 No perpetual motion, staggered alerts, gradients, emojis or status pulse effects.
