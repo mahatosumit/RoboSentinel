@@ -1,4 +1,42 @@
-# Repeatable 60–90 second demonstration
+# Repeatable 90-second competition demonstration
+
+## Primary: deterministic browser safety case
+
+Run `npm start`, open **http://127.0.0.1:3000/replay.html**, and choose Next
+evidence step. This is a separate scripted monitor, not the live cockpit. Nothing
+advances with wall time: a slow explanation or background tab cannot skip steps.
+The sequence deliberately loses communications **before** introducing heat so a
+judge can see why hidden plant state must not be presented as an observed fault.
+
+Suggested timing, not a measured recording:
+
+| Time | Replay steps | Evidence and narration |
+| --- | --- | --- |
+| 0–10s | 1: healthy start | “A robot's last report is not permission to move. This is synthetic navigation with clear interlocks.” |
+| 10–25s | 2–3: lose link; advance four monitored seconds | Show the actual packet still reporting navigating, commanded state faulted, motion disabled and packet/heartbeat/sensor ages 4000 ms. “The monitor uses its own clock.” |
+| 25–40s | 4–6: introduce hidden heat, attempt confirmed retry, restore link | The stale packet cannot reveal the new heat. Retry is rejected. Restoring the link reveals a real 95 °C observation; freshness recovers but the motor fault still blocks motion. |
+| 40–55s | 7–8: reject hot retry; clear heat | Show the actual rejection, then no active faults **with the stop latch retained**. “Clear cause is not authorization.” |
+| 55–72s | 9–12: reject Start and unconfirmed Retry; confirm; fresh tick | Four rejected requests are audited overall. Confirmed Retry enters recovering with motion disabled; only the final fresh tick clears the latch and enables simulated navigation. |
+| 72–90s | Evidence/timeline/history; Download evidence JSON | Show computed expected-versus-observed checks and the actual command events. Download complete evidence. Point to `npm test` and the identical `npm run demo` fallback, not an invented test log. |
+
+Every Next step executes actual simulator/monitor/policy code and asserts its
+observations. The page shows only executed steps and labels partial evidence.
+Scripted confirmation is part of this fixed replay; it is not an autonomous
+real-world recovery decision. Restart reconstructs the isolated replay and
+discards its prior frames; download first if you want to keep them.
+
+### Fallback if the browser or live presentation fails
+
+1. Run **`npm run demo`**. After the three original scenarios it executes the
+   identical asserted 12-step incident and prints reported/commanded state,
+   motion, latch, acceptance and check counts. Exit failure is not a successful demo.
+2. If execution itself is unavailable, show the genuine captures below as
+   **previous automated evidence**, not as a live run. Show the verified source
+   and test instructions; do not fabricate current logs or claim success.
+3. If a module fails, leave its unavailable/error state visible. Do not replace
+   it with a success screenshot while describing it as current execution.
+
+## Alternative: manually operated cockpit
 
 ## Preparation
 
@@ -9,17 +47,17 @@ Use Reset simulation and confirm if the scene is not fresh. Do not reload midway
 if you want to retain that tab's audit history. Pre-position a terminal with
 `npm run demo` output to show the actual rejected retry without using devtools.
 
-## Script (target 80 seconds; suggested timing, not a fabricated recording)
+### Manual script (target 90 seconds; suggested timing)
 
 | Time | Operator action | What to show / say |
 | --- | --- | --- |
 | 0–10s | Show fresh robot state; select Start mission | “This is a simulation-only indoor mobile robot. Telemetry and safety monitoring are independent of mission motion.” |
 | 10–22s | Select Motor overheating; Inject fault | Point to 95 °C, critical severity, rule thresholds, detection time and recommended inspection. Commanded mode becomes faulted; motion is disabled. |
-| 22–34s | Show disabled Retry mission and its reason; press Start mission | Show rejection and the command-rejected event. For a literal confirmed unsafe retry, point to the real `npm run demo` line `Reject unsafe confirmed retry ... accepted=false`. The UI intentionally does not enable unsafe retry. |
-| 34–45s | Clear Motor overheating | Active fault clears, but the safety latch and disabled motion remain. “Clearing a cause is not recovery authorization.” |
-| 45–58s | Retry mission; review dialog; Confirm retry | Cancel is initially focused. After confirmation, show recovering with motion disabled, then navigating after a fresh monitored one-second check. |
-| 58–74s | Inject Communication loss; wait >3 seconds | Heartbeat/packet/sensor ages rise. Three critical freshness faults stop the mission. Reported packet mode remains navigating while commanded state is faulted. |
-| 74–85s | Show event history and simulation banner | Point to injection, fault-raised, safety-stop, rejection and recovery evidence. “No real motors, hardware validation or certified safety claims.” |
+| 22–34s | Add Communication loss; wait >3 seconds | The packet freezes while the motor fault remains; heartbeat/packet/sensor ages cross the boundary and faults stack. Unlike the primary replay, this packet already reported faulted. Do not claim it reports navigating. |
+| 34–45s | Show disabled Retry reason; press Start mission | Show rejection and the command-rejected event. For a literal confirmed unsafe retry, use the real CLI replay output. The UI intentionally does not enable unsafe retry. |
+| 45–58s | Clear Motor overheating, then clear Communication loss | While the packet is frozen, clearing the cause does not prove a fresh healthy observation. Restoring the link clears the observed faults, but the latch remains. |
+| 58–74s | Retry mission; cancel once; request again and confirm | Cancel is initially focused and does not authorize recovery. Confirmation enters recovering with motion disabled, then navigating after a fresh monitored one-second check. |
+| 74–90s | Show event history, genuine test/demo output and simulation banner | Point to injections, faults, stop, rejection and recovery evidence. “No real motors, hardware validation or certified safety claims.” |
 
 ## Expected outcomes
 
@@ -39,6 +77,8 @@ Chromium QA harness, not generated as mockups:
 - `docs/evidence/communication-loss.png` — stale reported versus commanded state
 - `docs/evidence/narrow-screen.png` — 390px layout and confirmed-reset history
 - `docs/evidence/module-error.png` — deliberately aborted monitor-module request
+- `docs/evidence/incident-replay.png` — replay step 3, frozen navigating report versus commanded stop
+- `docs/evidence/incident-recovery.png` — replay step 12, fresh confirmed recovery and complete timeline
 
 They use controlled test time and synthetic data. No video, public demo link,
 hosted application or recording duration is claimed. A presenter can record the

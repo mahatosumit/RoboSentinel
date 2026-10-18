@@ -46,3 +46,16 @@ Automated Chromium checks cover desktop, 768px tablet, 390px and 320px narrow
 layouts, keyboard controls, cancel-first dialog focus and >=44px target heights.
 Text-role colour tokens are tested at >=4.5:1 on white and the canvas; this is
 not a full WCAG or screen-reader certification. See docs/verification.md.
+
+## Judge replay
+
+The cockpit links to a separate `/replay.html` evidence view using the same
+offline tokens, not a marketing page. Four adjacent readouts distinguish the
+reported mode, commanded state, motion authorization and latch; retry eligibility
+has its actual reason and explicit confirmation requirement. Twelve manually
+advanced steps show real operations, clocks, faults, checks and event history.
+Waiting does not advance this scripted scene. Partial/complete JSON export is
+labelled; restart reconstructs only this independent replay, not the live plant.
+Initialization/error states disable execution rather than showing success.
+The replay has keyboard controls and checked 320px/tablet containment; this does
+not add a manual screen-reader or hardware validation claim.

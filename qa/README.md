@@ -42,19 +42,29 @@ setup is less strictly pinned than the dependency-free application runtime.
 
 ## Coverage and evidence
 
-15 checked journeys: healthy load/keyboard mission controls; overheating and
+19 checked journeys: healthy load/keyboard mission controls; overheating and
 latched recovery; low/critical battery; sensor failure; obstacle stop; stacked
 priority/reset audit; sensor stale; heartbeat loss and reported/commanded split;
 monitoring gap/shutdown; stale confirmation revalidation; synthetic return-to-base;
-390px keyboard confirmation/touch sizes; 320px and 768px layout; module-load error.
+390px keyboard confirmation/touch sizes; 320px and 768px layout; incident replay
+sequence/export/reset/no-wall-time advancement; replay keyboard/narrow layout;
+loaded cockpit with HTTP networking offline; replay HTTP 503 module error;
+original cockpit module-load error.
 
-Main journeys fail on captured console/page errors or failed requests. The last
-journey intentionally aborts the monitor module and asserts its error state.
+Normal journeys fail on captured console/page errors or failed requests. Two
+failure journeys intentionally return HTTP 503 for the replay engine or abort
+the cockpit monitor module, then assert disabled/error states. These are
+controlled fault tests, not healthy network loads or actual deployed outages.
 By default screenshots go into ignored `test-results/browser-qa/`, so running
 QA does not modify tracked release evidence. To deliberately refresh genuine
 release captures, run `CAPTURE_EVIDENCE=1 bash qa/test-debian.sh` and review the
 resulting `docs/evidence/` changes before committing. `qa-failure.png` is an
 ignored diagnostic overwritten on failure, never release evidence.
+
+To refresh only the two new replay captures while preserving historical cockpit
+PNGs, use `CAPTURE_REPLAY_EVIDENCE=1 bash qa/test-debian.sh`. The captures show
+actual replay steps 3 and 12. This does not create a video. Normal runs still
+write screenshots only under ignored `test-results/browser-qa/`.
 
 Automated Chromium is not manual screen-reader QA, Safari/Firefox coverage,
 performance measurement, a full accessibility audit or hardware validation.

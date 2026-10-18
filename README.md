@@ -12,6 +12,11 @@ it to reproduce fault combinations, inspect evidence and test recovery
 restrictions before introducing hardware. The goal is observable, testable
 systems behaviour, not a chatbot or an unsupported claim of ML intelligence.
 
+**A robot's last report is not permission to move.** The distinguishing safety
+case freezes a navigating packet, stops on stale evidence, then reveals a hidden
+motor fault when the link returns. Even after all faults clear, the stop latch
+requires explicitly confirmed, freshly checked recovery.
+
 > **Simulation only.** This project does not control real robots, motors or
 > actuators. It is not a certified functional-safety system. Its thresholds and
 > recovery rules are illustrative software policies, not guarantees of physical safety.
@@ -24,9 +29,9 @@ systems behaviour, not a chatbot or an unsupported claim of ML intelligence.
 
 | Area | Status | Evidence / scope |
 | --- | --- | --- |
-| Core behaviour, HTTP surface and contrast tokens | **VERIFIED** | 51 tests passed; no failures or skips |
-| JavaScript syntax and deterministic demos | **VERIFIED** | 15 files; 3 scenario transcripts passed |
-| Rendered dashboard | **VERIFIED** | 15 automated Chromium journeys, including keyboard and narrow layouts |
+| Core behaviour, incident replay, HTTP surface and contrast tokens | **VERIFIED** | 60 tests passed; no failures or skips |
+| JavaScript syntax and deterministic demos | **VERIFIED** | 18 files; 3 scenarios plus the 12-step safety replay passed |
+| Rendered cockpit and replay | **VERIFIED** | 19 automated Chromium journeys, including export, keyboard and narrow layouts |
 | Clean local checkout | **VERIFIED** | Offline root install, checks and server/route smoke tests passed |
 | Docker image and hosted CI | **NOT TESTED** | Recipes exist; no successful Docker build or hosted run is claimed |
 | Hardware, Safari/Firefox and manual screen-reader use | **NOT TESTED** | Outside the current evidence |
@@ -37,6 +42,29 @@ badges or certification. Details and limitations are in
 [`docs/verification.md`](docs/verification.md).
 
 ## Visual demonstration
+
+### Replay the safety argument, not just the dashboard
+
+Run the [quick start](#quick-start), then open
+**http://127.0.0.1:3000/replay.html** or choose **Replay safety case** in the cockpit.
+Advance 12 fixed steps at your own pace—there is no wall-clock race. Each step
+executes the same monitor used by the live simulation, compares actual evidence
+with assertions, and stops on a mismatch rather than painting a success state.
+
+![Actual replay at step three: the last packet reports navigating while the commanded state is faulted, motion disabled and packet age 4000 milliseconds](docs/evidence/incident-replay.png)
+
+The sequence proves **stale report ≠ current knowledge ≠ commanded state ≠
+recovery permission**. A second injected cause is deliberately not diagnosed
+until fresh observations arrive. Retry is rejected while stale or hot; clearing
+heat retains the latch; Start and unconfirmed Retry are rejected; confirmed
+Retry enters recovering before a fresh tick authorizes simulated motion.
+
+Download partial or complete JSON evidence containing actual operations,
+snapshots, checks and monitor events. This is a scripted, independent simulation,
+not a live robot connection or tamper-proof audit log. Restart reconstructs this
+replay only. The identical case also runs in `npm run demo` without a browser.
+The [completed-recovery capture](docs/evidence/incident-recovery.png) and
+[90-second presenter script](docs/demo-walkthrough.md) show the full path.
 
 ### Overheating: evidence, stop and rejected restart
 
@@ -82,8 +110,9 @@ There is no hosted application or recorded-video link to claim.
   delayed-monitoring-callback interlock, including while a mission is paused.
 - **Operator dashboard:** periodically updated telemetry, prioritized faults,
   visible policy reasons, keyboard-accessible dialogs and responsive layouts.
-- **Audit and repeatable demos:** latest-300-event action/fault history and three
-  executable acceptance scenarios that fail if a safety expectation is unmet.
+- **Audit and repeatable demos:** latest-300-event action/fault history, three
+  executable acceptance scenarios and a 12-step browser/CLI incident replay with
+  computed assertions and downloadable snapshot evidence.
 
 ## Quick start
 
@@ -170,6 +199,7 @@ flowchart LR
     Monitor -->|faults and current state| Policy["policy.js"]
     Policy -->|stop policy and eligibility| Monitor
     Monitor -->|snapshot and events| UI
+    Replay["incident.js: fixed asserted replay"] -->|isolated commands and ticks| Monitor
 ```
 
 | File | Responsibility |
@@ -178,10 +208,12 @@ flowchart LR
 | [`src/detector.js`](src/detector.js) | Packet validation, thresholds, evidence, severity and deterministic fault ordering |
 | [`src/policy.js`](src/policy.js) | Pure stop policy and action eligibility; no mutation or trust in UI decisions |
 | [`src/monitor.js`](src/monitor.js) | Authoritative simulation clock, command checks, stop latch, recovery timing and event lifecycle |
+| [`src/incident.js`](src/incident.js) | Deterministic 12-step safety case, actual monitor snapshots, computed checks and mismatch refusal |
 | [`server.js`](server.js) | Loopback static HTTP server, exact asset allowlist and security headers |
 | [`public/app.js`](public/app.js) | Periodic updates, safe DOM rendering, controls, confirmations and error presentation |
 | [`public/index.html`](public/index.html) | Semantic dashboard structure, labels, live-status regions and native dialog |
 | [`public/styles.css`](public/styles.css) | Visual tokens, severity states, focus treatment and responsive layout |
+| [`public/replay.js`](public/replay.js) | Separate step-driven evidence view, timeline, JSON download and honest error states |
 
 The [implementation contract](docs/implementation-plan.md) defines telemetry,
 configuration and module APIs. Modes are `idle`, `navigating`, `paused`, `faulted`
@@ -249,16 +281,19 @@ Fresh Linux verification of the current implementation:
 
 | Evidence | Outcome | What it does not prove |
 | --- | --- | --- |
-| `npm test` | **51 passed, 0 failed, 0 skipped** | No hardware or coverage-percentage claim |
-| `npm run check` | **15 JavaScript files passed** | Syntax only, not a linter/typechecker |
-| `npm run demo` | **3 asserted deterministic scenarios passed** | Synthetic cases, not field trials |
-| `bash qa/test-debian.sh` | **15 automated Chromium journeys passed** | Not Safari/Firefox, native Windows or manual screen-reader certification |
-| Separate clean Git checkout | Offline install, core checks and 11 HTTP route assertions passed | Not a Docker build or all-Linux-distribution test |
+| `npm test` | **60 passed, 0 failed, 0 skipped** | No hardware or coverage-percentage claim |
+| `npm run check` | **18 JavaScript files passed** | Syntax only, not a linter/typechecker |
+| `npm run demo` | **3 scenarios and all 12 asserted replay steps passed** | Synthetic cases, not field trials |
+| `bash qa/test-debian.sh` | **19 automated Chromium journeys passed** | Not Safari/Firefox, native Windows or manual screen-reader certification |
+| Separate clean Git checkout at `d1884be` | Offline install and `make test` passed; no working-tree tool overlay | Not a Docker build or all-Linux-distribution test |
 
 Browser checks exercise normal/stacked faults, stale timeouts, commanded versus
 reported state, confirmation revalidation, keyboard controls, reset evidence,
 320px/390px/tablet/desktop layouts and a deliberate module-load error. Normal
-journeys had no captured page/console errors or failed asset requests. Screenshot
+journeys had no captured page/console errors or failed asset requests. Replay QA
+also inspects downloaded JSON, verifies no wall-time advancement and exercises a
+deliberate HTTP 503 module error. A loaded cockpit runs offline because its
+simulation is local; HTTP disconnection is not robot-link telemetry. Screenshot
 review is distinct from automated checks; no comprehensive manual accessibility
 review has been performed.
 
@@ -278,12 +313,13 @@ metrics remain **NOT TESTED**.
 
 Run `npm run demo` for three deterministic cases: overheating with rejected
 unsafe retry and confirmed recovery; frozen communication with stale-data stop;
-and stacked faults followed by an audited confirmed reset.
+and stacked faults followed by an audited confirmed reset. It then runs the same
+12-step lost-link/hidden-heat replay as the browser, with asserted outcomes.
 
 For a live presentation, follow [`docs/demo-walkthrough.md`](docs/demo-walkthrough.md):
-healthy navigation → inject overheating → inspect evidence/stop → show rejected
-restart and unsafe-retry restriction → clear without restart → confirm recovery
-→ inject communication loss. The core segment takes a suggested 60–90 seconds;
+healthy → lost link → stale report versus commanded stop → hidden overheating →
+rejected retry → fresh link reveals heat → clear cause without restart → confirmed
+recovery → inspect/download evidence. The core segment targets 90 seconds;
 an optional 2–3 minute recording can add the problem, architecture and test evidence.
 No recording has been created or published.
 
@@ -291,7 +327,8 @@ No recording has been created or published.
 
 **Planned, not implemented; no delivery dates promised:**
 
-- Persist/export event history so review evidence survives a tab closing.
+- Persist/export arbitrary live-cockpit event history; the fixed replay already
+  exports its executed evidence, but live history remains in memory only.
 - Expand browser and assistive-technology checks, and execute the Docker recipe
   in a clean container before making stronger portability claims.
 - Define and test an external telemetry adapter with sequence/replay validation
@@ -322,6 +359,7 @@ are permitted with its notice retained; the software is provided without warrant
 - [Demo presenter script](docs/demo-walkthrough.md)
 - [Design system](DESIGN.md)
 - [Buildathon submission draft and verified event guidance](docs/submission.md)
+- [Official-criteria assessment and skeptical competition review](docs/competition-review.md)
 - [Official Frontier Buildathon 2026 guide](https://omnirush.ai/buildathon)
 
 **Publication status:** a public GitHub URL has not been verified from this

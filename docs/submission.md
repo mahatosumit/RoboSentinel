@@ -43,16 +43,16 @@ which is not an ML model or a deployed robot controller. It is a recommendation
 based on that definition, not a claim of track assignment or prize eligibility.
 Confirm the user's joined/eligible account and the track in the live dashboard.
 
-## Title (62 Unicode characters)
+## Title (46 Unicode characters)
 
-RoboSentinel — Intelligent Robot Monitoring and Fault Response
+RoboSentinel — Replayable Robot Fault Response
 
-## Description (464 Unicode characters)
+## Description (473 Unicode characters)
 
-RoboSentinel is a simulation-first robot monitoring and fault-response prototype. It combines deterministic telemetry, explainable fault rules, safety interlocks and an interactive dashboard. Operators can stack faults, inspect evidence, observe simulated stops and verify confirmed recovery restrictions. Its dependency-free local runtime includes automated tests and repeatable demo scenarios. No real hardware is controlled; it is not a certified safety system.
+RoboSentinel turns simulated robot telemetry into explainable faults, constrained responses and auditable recovery. Its deterministic 12-step replay shows stale navigating reports versus a commanded stop, hidden overheating revealed after link recovery, rejected unsafe retries and explicit, freshly checked recovery. Judges can inspect computed checks, download JSON evidence and run the same case offline. No hardware is controlled; this is not a certified safety system.
 
 Counts include spaces/punctuation, excluding headings/newlines. The description
-fits a limit of at least 464 characters, but **form-limit compliance remains
+fits a limit of at least 473 characters, but **form-limit compliance remains
 BLOCKED** until the actual title/description fields are inspected.
 
 ## Links and demonstration
@@ -63,7 +63,8 @@ BLOCKED** until the actual title/description fields are inspected.
 - **Public demo/video URL: NOT AVAILABLE.** Neither is mandatory per the guide;
   do not add a placeholder URL to the final form.
 - Local dashboard: `npm start`, then `http://127.0.0.1:3000/`.
-- Deterministic demonstration: `npm run demo`.
+- Judge replay: **http://127.0.0.1:3000/replay.html**, 12 actual steps with JSON export.
+- Deterministic demonstration/fallback: `npm run demo`, including the identical replay.
 - Presenter script: [`demo-walkthrough.md`](demo-walkthrough.md), including an
   optional 2–3 minute recording outline.
 - Genuine screenshot evidence: [`evidence/`](evidence/), including
@@ -78,16 +79,19 @@ BLOCKED** until the actual title/description fields are inspected.
    current-policy revalidation and no automatic restart after cause clearing.
 4. Responsive dashboard separating commanded safety state from reported packet mode.
 5. Latest-300-event in-memory history retained across confirmed resets.
-6. Zero-dependency local runtime and three executable acceptance scenarios.
-7. Fresh verification: **51 core/HTTP/contrast tests**, **15 syntax-checked files**,
-   **3 scenario transcripts** and **15 isolated Chromium journeys** passed.
+6. Zero-dependency runtime, three acceptance scenarios and a browser/CLI replay
+   with actual snapshots, computed checks, mismatch refusal and JSON download.
+7. Fresh verification: **60 tests**, **18 syntax-checked files**, **3 scenarios
+   plus all 12 replay steps**, and **19 isolated Chromium journeys** passed.
+8. Clean checkout at `d1884be` passed offline root installation and `make test`.
 
 ## Known limitations
 
 Simulation only; no hardware drivers, certified safety capability, calibrated
 thresholds, realistic maps/charging/RTB route, fleet support or external-stream
 sequencing/replay adapter. Audit history is bounded/in-memory and disappears on
-reload. Safari/Firefox, native Windows, physical mobile devices, manual screen-
+reload; only the fixed incident replay exports executed evidence, not arbitrary
+live sessions. Safari/Firefox, native Windows, physical mobile devices, manual screen-
 reader use, performance/load measurements, Docker and hosted CI are not tested.
 
 ## Genuine OmniRush session evidence
@@ -101,6 +105,17 @@ This is an **app-local pointer**, not a public URL or a selected/accepted event
 session. No session was fabricated or backfilled. Select the genuine session in
 the signed-in dashboard and verify that the organizer can access the expected
 work history; no session-share link or acceptance receipt is claimed here.
+
+The current app context reverified that same session/title on 19 October. The
+replay engine/UI were implemented by two bounded OmniRush sub-agent tasks in
+this workflow, then reviewed/integrated and tested in the parent. Git history
+dates fall within the event window; timestamps alone are not proof of original
+work or organizer acceptance. Do not invent or backfill additional sessions.
+
+The built-in browser's attempt to open the event dashboard timed out and a
+subsequent tab listing was empty. No signed-in page was inspected and no write
+or submission action was dispatched. The extension action inventory exposed no
+GitHub/publication action that resolves the CLI authentication blocker.
 
 ## Final submission checklist
 

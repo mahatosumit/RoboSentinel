@@ -10,6 +10,10 @@ graph completeness is claimed. This is not a security certification or a
 hardware test. Initial review began 18 October 2026; the presentation/rules
 refresh below was verified on 19 October 2026 (Asia/Calcutta / IST).
 
+**Latest replay release:** 60 tests, 18 syntax-checked files, three original
+scenarios plus the 12-step replay, and 19 automated Chromium journeys passed.
+See the final section for current evidence; earlier counts are historical.
+
 ## Baseline before edits
 
 - Clean `main`, HEAD `d9b0766`, one commit, no remote, no uncommitted changes.
@@ -38,7 +42,7 @@ That statement is not an exhaustive vulnerability-free claim.
 
 ## Security review boundaries
 
-- **HTTP:** Only GET/HEAD for seven asset paths plus `/index.html`; methods such
+- **HTTP:** Only GET/HEAD for eleven asset paths plus `/index.html`; methods such
   as POST/PUT/PATCH/DELETE/OPTIONS/TRACE are 405. No body parsing or state-changing
   robot endpoints. Query strings cannot dispatch commands.
 - **Paths:** Exact raw-path allowlist with no path joins from user input. Tests
@@ -62,7 +66,7 @@ That statement is not an exhaustive vulnerability-free claim.
   provided. Keep the prototype local; public/network deployment is not hardened
   as a robot control service. Nothing here commands real hardware.
 
-## Automated verification results
+## Automated verification results — pre-replay release
 
 - `npm test`: **51 passed, 0 failed**, no skipped tests.
 - `npm run check`: **15 JavaScript files**, syntax checks only (not a linter).
@@ -199,3 +203,84 @@ tracked PNGs**, and the **62/464-character** title/description. It did not rende
 GitHub's Mermaid/Markdown or inspect a public repo. A diff against `f230795`
 confirmed the runtime, UI, tests, scenarios, scripts and tracked screenshots
 were unchanged by this documentation-only refresh.
+
+## Competition improvement — 19 October 2026
+
+Started clean at `514e552`. Before modification independently reran `npm test`
+(51 passed, zero failed/skipped), `npm run check` (15 files), `npm run demo`
+(three scenarios), and `bash qa/test-debian.sh` (15 actual Chromium journeys).
+The clock read **19 October 00:24:50 IST**. GitHub CLI was unauthenticated and
+the primary repository had no remote. No Docker, Podman or Buildah command was
+available; no container build/run is claimed.
+
+### Implemented and reviewed
+
+Two bounded OmniRush agents implemented the isolated replay engine/tests and
+the separate browser interface. Parent source review covered the four existing
+core modules, scenario runner, server, live UI/HTML/CSS, tests, fixtures and
+requested project docs. The parent integrated exact asset routes and browser
+regressions, then added the same replay to the CLI fallback. No changes to the
+existing simulator/detector/policy/monitor or live app control loop were needed.
+
+- `af705d3`: real-monitor replay, actual snapshots/computed assertions, JSON
+  download, explicit error states, scoped server assets and genuine captures.
+- `d1884be`: same asserted 12-step replay in `npm run demo`, with a CLI regression.
+- Original five evidence PNGs remain unchanged; `incident-replay.png` and
+  `incident-recovery.png` are genuine additional captures of steps 3 and 12.
+
+### Red/green evidence and actual results
+
+- Before implementation, the new browser test failed because the replay entry
+  link did not exist. The engine's initial test failed on the missing module.
+- HTTP integration test failed on 404 before the new allowlisted routes existed.
+- CLI fallback regression failed because the new incident was absent, then
+  passed after integrating the real engine. No expected core outcome was changed.
+- An intermediate keyboard QA failure focused a still-disabled button before
+  dynamic-import initialization; the test now waits for the real ready status,
+  preserving its keyboard/focus assertions. No product interlock was loosened.
+- `npm test`: **60 passed, 0 failed, 0 skipped**.
+- `npm run check`: **18 JavaScript files passed**, syntax only.
+- `npm run demo`: **three original scenarios and all 12 new replay steps passed**.
+- `CAPTURE_REPLAY_EVIDENCE=1 bash qa/test-debian.sh`: **19 journeys passed** at
+  the feature integration point (before the subsequent CLI-only addition).
+- Replay checks cover actual real-monitor equivalence, hidden causes versus
+  received data, four rejected requests, retained latch, confirmed/fresh recovery,
+  equal replays, cloned isolation, completion/reset and mismatch refusal.
+- Browser checks inspect actual downloaded JSON bytes, all steps, reset,
+  partial/complete availability, no wall-time advancement over 60 simulated wall
+  seconds, keyboard operation, 320px/768px containment and two failure UIs.
+- Normal journeys captured no page/console errors or failed asset requests.
+  Two intentional fault journeys abort the cockpit monitor or serve HTTP 503
+  for the replay module; they are not represented as clean network loads.
+- Browser networking-offline test confirms the already-loaded cockpit computes
+  locally. It does not pretend that the static server is a robot telemetry API
+  or turn an HTTP disconnect into a simulated robot communication-loss fault.
+
+### Fresh checkout, no local-tool overlay
+
+A new `git clone --no-local` under ignored `.verification/frontier-release/`
+checked out **`d1884be0e0bc4d7d270e4c3d046eed445ca0e3b4`**. It contains tracked
+project files only, not the working-tree QA libraries, browsers or CLI. There:
+
+1. `npm ci --ignore-scripts --offline --no-audit --no-fund` passed.
+2. `make test` passed: 60 tests, 18 syntax checks, three scenarios and 12 replay steps.
+3. Clone working tree remained clean. This is still the same Debian environment,
+   not Docker, a public GitHub clone, a physical device or every Linux distribution.
+
+### External gates are not completion claims
+
+The official guide was fetched again: four named judging criteria, no numeric
+weights. Session identity was confirmed from current app context. Git history
+falls within the published event window, but dates alone cannot prove provenance.
+The built-in browser timed out opening the event dashboard; the follow-up tab
+list was empty. No authenticated form was inspected and no submission dispatched.
+Extension discovery did not expose a GitHub publication action. Authentication,
+connected account/registration, public URL/rendering, Docker execution, hosted CI
+and the real dashboard/Unstop receipt remain unverified or blocked as applicable.
+
+Local presentation validation checked **48 relative Markdown links/anchors**,
+all **7 PNG signatures/dimensions**, and the revised **46/473-character** draft
+title/description. These checks cover filesystem references, not anonymous
+GitHub rendering, remote image requests, Mermaid rendering or live form limits.
+The original safety core, live app/shared stylesheet, manifests/locks and five
+historical PNGs were also diff-checked unchanged against `514e552`.

@@ -20,6 +20,8 @@ locked in `qa/` and is not part of the application runtime.
 - `src/policy.js`: pure safety policy and action eligibility.
 - `src/monitor.js`: independent monitoring clock, fault lifecycle, safety latch,
   operator commands and bounded event history.
+- `src/incident.js`: fixed 12-step acceptance replay against an isolated monitor,
+  exposing actual snapshots and computed checks; no alternate safety policy.
 - `public/`: accessible responsive dashboard, no independent safety decisions.
 - `server.js`: static localhost server only, not a hardware or command API.
 
@@ -92,6 +94,35 @@ reload closes the old scene and its audit evidence is not durably retained.
 
 ## Verification stages
 
+### Deterministic incident replay contract
+
+`createIncidentReplay()` returns `{snapshot, next, reset}`. Each method returns
+a deep-cloned view: `{id,title,stepIndex,totalSteps,complete,current,frames}`.
+Initial stepIndex is 0; frames contains only executed steps. A frame has
+`{step,title,explanation,operation,result,state,checks}`. State is the actual
+monitor snapshot; checks contain `{label,expected,observed,passed}` computed from
+observations, not UI labels. `next()` executes one fixed step; after step 12 it
+is idempotent. An assertion/operation failure refuses further advancement until
+reset. `reset()` constructs an independent fixed-seed/time monitor; it is not
+the live monitor's `command('reset')` and cannot bypass that command's confirmation.
+
+The case starts healthy, freezes navigation telemetry, advances four monitored
+one-second ticks, introduces overheating behind the lost link, rejects retry,
+restores communications to reveal heat, rejects retry again, clears heat without
+restarting, rejects Start/unconfirmed Retry, then performs confirmed recovery
+and a fresh tick. No elapsed browser time is consumed by this separate replay.
+There is no arbitrary scenario input, external packet ingestion or code evaluation.
+
+`public/replay.html`/`replay.js` expose current actual state, evidence, fault cards,
+timeline/history and a JSON download with schema `robosentinel.incident.v1`,
+scope `simulation-only` and the executed view under `replay`. Downloads distinguish
+partial/complete runs. They are not signed or tamper-proof and do not persist the
+live cockpit's log. The same incident executes after the three original cases
+in `npm run demo` as a browser-independent fallback. Static routes are explicit;
+repository/config/test files remain unserved.
+
+### Checks
+
 1. Simulator tests: deterministic samples, physical ranges, every injection,
    combined injections, configuration rejection and reset.
 2. Detector/policy tests: each fault, thresholds, invalid/stale/future data,
@@ -100,6 +131,8 @@ reload closes the old scene and its audit evidence is not durably retained.
    communication loss, fault resolution, logging and reset.
 4. HTTP smoke and browser interaction; deterministic CLI scenario assertions.
 5. Fresh dependency-free setup and full `npm test`, `npm run check`, `npm run demo`.
+6. Replay real-monitor equivalence, determinism, cloned isolation, reset/completion,
+   contract-mismatch refusal, actual browser JSON download and error handling.
 
 ## Design decisions and assumptions
 
