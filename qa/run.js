@@ -6,7 +6,8 @@ import { chromium } from 'playwright';
 import { createAppServer } from '../server.js';
 
 // Isolated test browser: never attaches to a user's profile or external browser.
-const evidence = fileURLToPath(new URL('../docs/evidence/', import.meta.url));
+const evidence = fileURLToPath(new URL(process.env.CAPTURE_EVIDENCE === '1'
+  ? '../docs/evidence/' : '../test-results/browser-qa/', import.meta.url));
 await mkdir(evidence, { recursive: true });
 const server = createAppServer();
 server.listen(0, '127.0.0.1');

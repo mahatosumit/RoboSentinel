@@ -50,7 +50,10 @@ monitoring gap/shutdown; stale confirmation revalidation; synthetic return-to-ba
 
 Main journeys fail on captured console/page errors or failed requests. The last
 journey intentionally aborts the monitor module and asserts its error state.
-Screenshots are real captures saved in `docs/evidence/`. `qa-failure.png` is an
+By default screenshots go into ignored `test-results/browser-qa/`, so running
+QA does not modify tracked release evidence. To deliberately refresh genuine
+release captures, run `CAPTURE_EVIDENCE=1 bash qa/test-debian.sh` and review the
+resulting `docs/evidence/` changes before committing. `qa-failure.png` is an
 ignored diagnostic overwritten on failure, never release evidence.
 
 Automated Chromium is not manual screen-reader QA, Safari/Firefox coverage,

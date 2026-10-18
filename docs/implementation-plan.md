@@ -72,13 +72,18 @@ Config includes simulator options plus `startTime` (default deterministic
 motionEnabled, shutdown, policy, actions}`. Events are chronological objects
 `{id,timestamp,type,message}`; action results `{ok,message}`. Actions object maps
 inspect/retry/return-to-base/shutdown to `{allowed,reason,requiresConfirmation}`.
-Commands: start, pause, reset, inspect, retry, return-to-base, shutdown.
+Commands: start, pause, reset, inspect, retry, return-to-base, shutdown. Reset,
+retry, return-to-base and shutdown require `confirmed: true` in the core API.
 Tick always advances the independent monitor clock, even while paused/faulted;
 running controls mission movement, not safety monitoring. `mode` and
 `motionEnabled` are authoritative commanded state; a stale telemetry mode may
 lag and must be labelled as reported state in UI. Events bounded at 300.
-Reset starts a new plant and clears fault/latch/shutdown, leaves robot idle,
-preserves prior history and records reset. Rejected commands are logged.
+Confirmed reset starts a new plant and clears fault/latch/shutdown, leaves robot
+idle unless configured initial conditions are unsafe, preserves bounded prior
+history and records the exact cleared fault IDs, injections, latch and shutdown
+state. Unconfirmed reset changes no plant state and logs rejection.
+All rejected commands are logged. History is in-memory, latest 300 events only;
+reload closes the old scene and its audit evidence is not durably retained.
 
 ## Verification stages
 

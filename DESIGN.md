@@ -35,3 +35,13 @@ visible focus, semantic headings, labelled values and no colour-only meaning.
 No perpetual motion, staggered alerts, gradients, emojis or status pulse effects.
 Safety messages must not disappear automatically. Canonical examples are the
 telemetry definition list, fault evidence panel and confirmed recovery dialog.
+
+## Release QA notes
+The monitoring badge reflects critical faults, warning/latch/shutdown or no-fault
+state while still stating that monitoring is active. A module-load error marks
+the commanded state unavailable instead of leaving a stale motion label.
+Core confirmation is mandatory for reset as well as recovery and shutdown.
+Automated Chromium checks cover desktop, 768px tablet, 390px and 320px narrow
+layouts, keyboard controls, cancel-first dialog focus and >=44px target heights.
+Text-role colour tokens are tested at >=4.5:1 on white and the canvas; this is
+not a full WCAG or screen-reader certification. See docs/verification.md.
