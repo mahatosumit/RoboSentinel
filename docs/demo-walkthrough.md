@@ -3,7 +3,9 @@
 ## Primary: deterministic browser safety case
 
 Run `npm start`, open **http://127.0.0.1:3000/replay.html**, and choose Next
-evidence step. This is a separate scripted monitor, not the live cockpit. Nothing
+evidence step. The **Causal progress** strip at the top is the judge's map: it
+marks only executed steps, highlights the current step and leaves future steps
+pending. This is a separate scripted monitor, not the live cockpit. Nothing
 advances with wall time: a slow explanation or background tab cannot skip steps.
 The sequence deliberately loses communications **before** introducing heat so a
 judge can see why hidden plant state must not be presented as an observed fault.

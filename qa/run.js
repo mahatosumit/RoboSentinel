@@ -129,7 +129,9 @@ try {
     await text(page, '#motion-state', /Motion disabled/);
     await confirm(page, 'Retry mission…');
     await text(page, '#commanded-mode', /^recovering$/);
-    await page.clock.runFor(1100);
+    // Leave margin beyond the one-second recovery check: fake-clock interval
+    // callbacks can land exactly on the boundary without a second refresh.
+    await page.clock.runFor(1500);
     await text(page, '#commanded-mode', /^navigating$/);
   });
   for (const [cause, title, stop] of [

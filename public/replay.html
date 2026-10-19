@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#236858">
+  <meta name="theme-color" content="#0f1717">
   <title>RoboSentinel · Replay safety case</title>
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/replay.css">
@@ -35,6 +35,24 @@
         </div>
         <p id="replay-status" class="replay-status" role="status" aria-live="polite" aria-atomic="true">Initializing independent replay…</p>
       </section>
+      <section class="panel replay-causal-map-panel" aria-labelledby="replay-map-title">
+        <div class="section-heading"><h2 id="replay-map-title">Causal progress</h2><span class="section-meta">Fixed incident path</span></div>
+        <p id="replay-map-status" class="replay-map-status" role="status" aria-live="polite" aria-atomic="true">Replay map is initializing.</p>
+        <ol id="replay-map" class="replay-causal-map">
+          <li data-step="1"><span class="replay-causal-number">1</span><span>Healthy start</span></li>
+          <li data-step="2"><span class="replay-causal-number">2</span><span>Lose communication</span></li>
+          <li data-step="3"><span class="replay-causal-number">3</span><span>Timeout latches stop</span></li>
+          <li data-step="4"><span class="replay-causal-number">4</span><span>Hidden heat</span></li>
+          <li data-step="5"><span class="replay-causal-number">5</span><span>Blind retry rejected</span></li>
+          <li data-step="6"><span class="replay-causal-number">6</span><span>Link returns, heat found</span></li>
+          <li data-step="7"><span class="replay-causal-number">7</span><span>Hot retry rejected</span></li>
+          <li data-step="8"><span class="replay-causal-number">8</span><span>Clear heat, latch stays</span></li>
+          <li data-step="9"><span class="replay-causal-number">9</span><span>Start blocked by latch</span></li>
+          <li data-step="10"><span class="replay-causal-number">10</span><span>Confirmation required</span></li>
+          <li data-step="11"><span class="replay-causal-number">11</span><span>Monitored recovery</span></li>
+          <li data-step="12"><span class="replay-causal-number">12</span><span>Fresh check authorizes motion</span></li>
+        </ol>
+      </section>
       <section class="panel replay-state-panel" aria-labelledby="state-title">
         <div class="section-heading"><h2 id="state-title">Monitor state at this step</h2><span class="section-meta">Recorded simulation state</span></div>
         <dl class="replay-readouts">
@@ -43,6 +61,8 @@
           <div><dt>Motion authorization</dt><dd id="replay-motion">Unavailable</dd></div>
           <div><dt>Safety stop latch</dt><dd id="replay-latch">Unavailable</dd></div>
         </dl>
+        <p id="replay-clock" class="replay-state-line">Unavailable</p>
+        <p id="replay-causal-note" class="replay-state-line">Current monitor state is unavailable.</p>
         <h3>Retry eligibility</h3><p id="replay-eligibility">Waiting for replay initialization.</p>
       </section>
       <div class="replay-grid">

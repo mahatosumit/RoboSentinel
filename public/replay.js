@@ -2,6 +2,47 @@ const byId = (id) => document.getElementById(id);
 let replay;
 let view;
 
+function renderCausalMap(nextView) {
+  const map = byId('replay-map');
+  const status = byId('replay-map-status');
+  if (!map || !status) return;
+
+  const stepIndex = Number.isInteger(nextView?.stepIndex) ? nextView.stepIndex : 0;
+  const totalSteps = Number.isInteger(nextView?.totalSteps) ? nextView.totalSteps : map.children.length;
+  const complete = nextView?.complete === true && stepIndex === totalSteps;
+  status.textContent = nextView
+    ? complete ? 'Complete' : stepIndex === 0 ? 'Ready' : `${stepIndex} of ${totalSteps} steps executed`
+    : 'Replay map unavailable.';
+
+  for (const item of map.children) {
+    const step = Number(item.dataset.step);
+    const executed = step <= stepIndex;
+    const current = stepIndex > 0 && step === stepIndex;
+    item.dataset.state = executed ? 'executed' : 'pending';
+    item.className = `replay-causal-step ${current ? 'is-current' : executed ? 'is-executed' : 'is-pending'}`;
+    if (current) item.setAttribute('aria-current', 'step');
+    else item.removeAttribute('aria-current');
+  }
+}
+
+function renderMonitorLine(state) {
+  if (!state) {
+    text('replay-clock', 'Unavailable');
+    text('replay-causal-note', 'Current monitor state is unavailable.');
+    return;
+  }
+  text('replay-clock', `${milliseconds(state.now)} simulation time`);
+  const noFaults = Array.isArray(state.faults) && state.faults.length === 0;
+  const note = state.latched && noFaults
+    ? 'No active faults. The stop latch still blocks motion.'
+    : state.mode === 'recovering'
+      ? 'Recovery is checking fresh observations; motion remains disabled.'
+      : state.motionEnabled
+        ? 'Current monitor state permits simulated motion.'
+        : 'Current monitor state does not permit simulated motion.';
+  text('replay-causal-note', note);
+}
+
 function node(tag, className, text) {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -160,6 +201,8 @@ function render(nextView) {
   const frame = view.current;
   const state = frame.state;
   const retry = state.actions.retry;
+  renderCausalMap(view);
+  renderMonitorLine(state);
   text('replay-title', view.title);
   text('replay-progress', `${view.stepIndex} / ${view.totalSteps}`);
   text('replay-completion', view.complete ? 'Complete evidence' : 'Partial evidence');
@@ -192,6 +235,8 @@ function fail(error, initialization = false) {
     : 'Execution stopped. Any evidence below is the last successfully rendered snapshot. Restart to reconstruct the independent replay.'}`);
   text('replay-status', 'Replay unavailable. No further evidence steps are executing.');
   text('replay-completion', 'Replay unavailable');
+  renderCausalMap(view);
+  renderMonitorLine(view?.current?.state);
   for (const id of ['replay-reported', 'replay-commanded', 'replay-motion', 'replay-latch']) text(id, 'Unavailable');
   text('replay-eligibility', 'Unavailable while the replay is stopped.');
   byId('replay-next').disabled = true;

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#236858">
+  <meta name="theme-color" content="#0f1717">
   <title>RoboSentinel · Simulation cockpit</title>
   <link rel="stylesheet" href="/styles.css">
   <script type="module" src="/app.js"></script>
@@ -16,6 +16,20 @@
       <div><p class="eyebrow">ROBOT OPERATIONS / SINGLE UNIT</p><h1>RoboSentinel</h1><p class="muted">Independent monitoring. Explicit recovery.</p></div>
       <div class="session-label"><span class="unit-mark" aria-hidden="true">R / 01</span><span>Indoor mobile robot<br><strong>Simulated plant</strong></span></div>
     </header>
+    <section class="mission-strip" aria-labelledby="mission-strip-title">
+      <div class="mission-copy">
+        <p class="eyebrow">THE SAFETY ARGUMENT</p>
+        <h2 id="mission-strip-title">A last report is not permission to move.</h2>
+        <p>The cockpit separates what the robot reported, what the monitor commands, and what recovery evidence actually permits.</p>
+      </div>
+      <ol class="mission-path" aria-label="RoboSentinel monitoring flow">
+        <li><span class="mission-node-number">01</span><span>Observe</span></li>
+        <li><span class="mission-node-number">02</span><span>Detect</span></li>
+        <li><span class="mission-node-number">03</span><span>Constrain</span></li>
+        <li><span class="mission-node-number">04</span><span>Recover</span></li>
+      </ol>
+      <a class="mission-link" href="/replay.html">Run the 12-step replay <span aria-hidden="true">↗</span></a>
+    </section>
     <div id="fatal-error" class="error-panel" role="alert" hidden></div>
     <noscript><p class="error-panel">JavaScript is required to run this local robot simulation.</p></noscript>
     <main id="main" tabindex="-1">

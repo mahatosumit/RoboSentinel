@@ -465,3 +465,26 @@ for unavailable HTTPS credentials, so the later release is not published.
 Docker/Podman/Buildah remain unavailable here; container build/start/export and
 the new hosted Docker job are **BLOCKED / NOT RUN**, not passed. No human user
 study, recording, authenticated form inspection or submission receipt exists.
+
+## Operations-console UI pass — local only
+
+The current local UI revision adds no runtime dependency and does not change the
+simulator, detector, policy, monitor or replay contracts. `public/styles.css` now
+uses a restrained graphite console palette with one teal action accent and explicit
+semantic states. The cockpit adds a concise safety-argument strip and preserves
+the simulation-only boundary. The replay adds a real-step causal map, simulation
+clock and state-derived recovery note; pending/current/executed markers are driven
+by `view.stepIndex`, not decorative progress.
+
+The browser QA harness was run after the redesign. **19 Chromium journeys passed**
+at the existing desktop, 768px tablet, 390px and 320px layouts, covering keyboard
+controls, confirmation focus, fault injection, stale/reported-versus-commanded
+state, replay/export/reset, offline local computation and intentional module
+failures. No page errors, console errors or failed assets were reported in normal
+journeys. The previous 1100 ms recovery assertion was made robust with a 1500 ms
+fake-clock margin because an interval callback can land exactly on the one-second
+boundary; the monitor's one-second recovery semantics are unchanged. Two fresh
+ignored screenshots were visually inspected at desktop and narrow widths,
+including the mission strip and replay causal map. This remains automated
+Chromium QA, not manual screen-reader certification, Safari/Firefox coverage or a
+full WCAG audit.
